@@ -88,12 +88,12 @@ public class QueryServlet extends HttpServlet
 		out.println("The IP address from where the file was uploaded: " + ip + "<br>"); 
 		out.println("*******************************************" + "<br>");
 		out.println("Performing the union operation with local file"+ "<br>");
-		Runtime rt = Runtime.getRuntime ();
+		//Runtime rt = Runtime.getRuntime ();
 		/** Assume that the script we want to call resides in the scripts directory
 			of our webapp for e.g. webapps/interContILP/WEB-INF/scripts
 		*/
-		Process process = rt.exec ("../../scripts/union.sh");
-		System.out.println(" Start executing the shell scripts .....");	  
+		//Process process = rt.exec ("../../scripts/union.sh");
+		//System.out.println(" Start executing the shell scripts .....");	  
 		     }
          }
          out.println("</body>");
