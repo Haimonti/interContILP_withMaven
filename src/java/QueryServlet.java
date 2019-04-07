@@ -7,10 +7,10 @@ import java.nio.file.Paths;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
+//import org.apache.commons.fileupload.FileItem;
+//import org.apache.commons.fileupload.FileUploadException;
+//import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+//import org.apache.commons.fileupload.servlet.ServletFileUpload;
 //import org.apache.commons.io.output.*;
 
 public class QueryServlet extends HttpServlet 
@@ -35,9 +35,9 @@ public class QueryServlet extends HttpServlet
         String savePath = appPath + File.separator + SAVE_DIR;
         // Allocate a output writer to write the response message into the network socket
       	PrintWriter out = response.getWriter();
-      	DiskFileItemFactory factory = new DiskFileItemFactory();   
+      	//DiskFileItemFactory factory = new DiskFileItemFactory();   
       	// Create a new file upload handler
-        ServletFileUpload upload = new ServletFileUpload(factory); 
+        //ServletFileUpload upload = new ServletFileUpload(factory); 
         // creates the save directory if it does not exists
         File fileSaveDir = new File(savePath);
         if (!fileSaveDir.exists()) 
