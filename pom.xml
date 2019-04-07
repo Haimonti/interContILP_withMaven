@@ -61,11 +61,6 @@
         <sourceDirectory>src/java</sourceDirectory>
         
         <plugins>
-        		<plugin>
-   					<groupId>com.google.appengine</groupId>
-  					 <artifactId>appengine-maven-plugin</artifactId>
-   					 <version>1.9.73</version>
-				</plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
