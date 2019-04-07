@@ -61,6 +61,11 @@
         <sourceDirectory>src/java</sourceDirectory>
         
         <plugins>
+        		<plugin>
+   					<groupId>com.google.appengine</groupId>
+  					 <artifactId>appengine-maven-plugin</artifactId>
+   					 <version>1.9.73</version>
+				</plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -91,6 +96,11 @@
         	 <artifactId>appengine-maven-plugin</artifactId>
         	  <version>${appengine-maven-plugin-version}</version>
       		</plugin>
+      		 <plugin>
+     			<groupId>org.eclipse.jetty</groupId>
+    			<artifactId>jetty-maven-plugin</artifactId>
+    			<version>9.3.7.v20160115</version>
+  			 </plugin>
         </plugins>
     </build>
 </project>
