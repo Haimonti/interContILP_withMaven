@@ -2,6 +2,7 @@
 import java.io.*;
 import java.util.*;
 import java.net.*;
+import java.nio.file.Paths;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -12,7 +13,6 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.output.*;
 
- 
 public class QueryServlet extends HttpServlet 
 {  
  	 /**
@@ -26,6 +26,7 @@ public class QueryServlet extends HttpServlet
    		public void doPost(HttpServletRequest request, HttpServletResponse response)
          throws IOException, ServletException 
      	{ 
+    
       	// read form fields
         //String fName = request.getParameter("fname");
         // gets absolute path of the web application
@@ -47,55 +48,25 @@ public class QueryServlet extends HttpServlet
  		try 
  		{ 
          // Parse the request to get file items.
-         List fileItems = upload.parseRequest(request);
-	
+         //List fileItems = upload.parseRequest(request);
+		 Part filePart = request.getPart("uploadFile");
+		 // MSIE fix.
+		 String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); 
+		 InputStream fileContent = filePart.getInputStream();
+    	 
          // Process the uploaded file items
-         Iterator i = fileItems.iterator();
-
+         //Iterator i = fileItems.iterator();
+		 System.out.println("File name is: "+fileName);
          out.println("<html>");
          out.println("<head>");
          out.println("<title>Query Servlet</title>");  
          out.println("</head>");
          out.println("<body>");
-   
-      while ( i.hasNext () ) 
-       {
-		FileItem fi = (FileItem)i.next();
-		if ( !fi.isFormField () ) 
-		{
-		   // Get the uploaded file parameters
-		   String fieldName = fi.getFieldName();
-		   String fileName = fi.getName();
-		   System.out.println("File name is: "+fileName);
-		   String contentType = fi.getContentType();
-		   boolean isInMemory = fi.isInMemory();
-		   long sizeInBytes = fi.getSize();
-		   // Write the file
-		   file=new File(savePath + File.separator + fileName);
-		   fi.write(file) ;
-		   out.println("Uploaded Filename: " + fileName + "<br>");
-		   //Get the IP address of the machine from where the file was uploaded
-		   String ip = request.getRemoteAddr();
-		   if (ip.equalsIgnoreCase("0:0:0:0:0:0:0:1")) 
-		   {
-			 InetAddress inetAddress = InetAddress.getLocalHost();
-			 String ipAddress = inetAddress.getHostAddress();
-			 ip = ipAddress;
-			 //Hostname
-			 String hostname = inetAddress.getHostName();
-			 out.println("Name of hostname : " + hostname+"<br>"); 
-		   }
-		out.println("The IP address from where the file was uploaded: " + ip + "<br>"); 
-		out.println("*******************************************" + "<br>");
-		out.println("Performing the union operation with local file"+ "<br>");
-		//Runtime rt = Runtime.getRuntime ();
-		/** Assume that the script we want to call resides in the scripts directory
-			of our webapp for e.g. webapps/interContILP/WEB-INF/scripts
-		*/
-		//Process process = rt.exec ("../../scripts/union.sh");
-		//System.out.println(" Start executing the shell scripts .....");	  
-		     }
-         }
+         out.println("Uploaded Filename: " + fileName + "<br>");
+         // Write the file
+		 fileName=savePath + File.separator + fileName;
+		 filePart.write(fileName) ;
+		 out.println("Writing File Done!");   
          out.println("</body>");
          out.println("</html>");
          } 
