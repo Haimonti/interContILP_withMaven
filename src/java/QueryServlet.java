@@ -48,20 +48,19 @@ public class QueryServlet extends HttpServlet
 		 Part filePart = request.getPart("uploadFile");
 		 // MSIE fix.
 		 String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); 
-		 fileContent = filePart.getInputStream();
-		 // Write the file
-		 //fileName=savePath + File.separator + fileName;
-		 System.out.println("File name is: "+fileName);
-		 File fNew = new File(fileName);
-		 outputContent = new FileOutputStream(fNew);
-
-         out.println("<html>");
+		 out.println("<html>");
          out.println("<head>");
          out.println("<title>Query Servlet</title>");  
          out.println("</head>");
          out.println("<body>");
          out.println("Uploaded Filename: " + fileName + "<br>");
-         while((isRead = fileContent.read())!=-1) 
+         System.out.println("File name is: "+fileName);
+		 fileContent = filePart.getInputStream();
+		 // Write the file
+		 //fileName=savePath + File.separator + fileName;		 
+		 //File fNew = new File(fileName);
+		 outputContent = new FileOutputStream(fileName);
+	     while((isRead = fileContent.read())!=-1) 
 		 {
 		  outputContent.write(isRead);
 		 }
