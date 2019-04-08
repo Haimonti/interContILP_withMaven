@@ -30,19 +30,12 @@ public class QueryServlet extends HttpServlet
    		public void doPost(HttpServletRequest request, HttpServletResponse response)
          throws IOException, ServletException 
      	{ 
-    
-      	// read form fields
-        //String fName = request.getParameter("fname");
         // gets absolute path of the web application
         String appPath = request.getServletContext().getRealPath("");
         // constructs path of the directory to save uploaded file
         String savePath = appPath + File.separator + SAVE_DIR;
         // Allocate a output writer to write the response message into the network socket
       	PrintWriter out = response.getWriter();
-      	//DiskFileItemFactory factory = new DiskFileItemFactory();   
-      	// Create a new file upload handler
-        //ServletFileUpload upload = new ServletFileUpload(factory); 
-        // creates the save directory if it does not exists
         File fileSaveDir = new File(savePath);
         if (!fileSaveDir.exists()) 
         {
@@ -52,13 +45,12 @@ public class QueryServlet extends HttpServlet
  		try 
  		{ 
          // Parse the request to get file items.
-         //List fileItems = upload.parseRequest(request);
 		 Part filePart = request.getPart("uploadFile");
 		 // MSIE fix.
 		 String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); 
 		 fileContent = filePart.getInputStream();
 		 // Write the file
-		 fileName=savePath + File.separator + fileName;
+		 //fileName=savePath + File.separator + fileName;
 		 System.out.println("File name is: "+fileName);
 		 File fNew = new File(fileName);
 		 outputContent = new FileOutputStream(fNew);
