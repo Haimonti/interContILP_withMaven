@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
+import java.io.FileOutputStream;
 
 //import org.apache.commons.fileupload.FileItem;
 //import org.apache.commons.fileupload.FileUploadException;
@@ -21,8 +22,11 @@ public class QueryServlet extends HttpServlet
      	 */
     	private static final String SAVE_DIR = "uploadFiles";
     	public File file;
+    	int DEFAULT_BUFFER_SIZE = 2048;
     	//public String filePath;
-    	
+    	int isRead=0;
+    	InputStream fileContent=null;
+    	OutputStream outputContent=null;
    		public void doPost(HttpServletRequest request, HttpServletResponse response)
          throws IOException, ServletException 
      	{ 
@@ -52,20 +56,23 @@ public class QueryServlet extends HttpServlet
 		 Part filePart = request.getPart("uploadFile");
 		 // MSIE fix.
 		 String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); 
-		 InputStream fileContent = filePart.getInputStream();
-    	 
-         // Process the uploaded file items
-         //Iterator i = fileItems.iterator();
+		 fileContent = filePart.getInputStream();
+		 // Write the file
+		 fileName=savePath + File.separator + fileName;
 		 System.out.println("File name is: "+fileName);
+		 File fNew = new File(fileName);
+		 outputContent = new FileOutputStream(fNew);
+
          out.println("<html>");
          out.println("<head>");
          out.println("<title>Query Servlet</title>");  
          out.println("</head>");
          out.println("<body>");
          out.println("Uploaded Filename: " + fileName + "<br>");
-         // Write the file
-		 fileName=savePath + File.separator + fileName;
-		 filePart.write(fileName) ;
+         while((isRead = fileContent.read())!=-1) 
+		 {
+		  outputContent.write(isRead);
+		 }
 		 out.println("Writing File Done!");   
          out.println("</body>");
          out.println("</html>");
@@ -76,6 +83,8 @@ public class QueryServlet extends HttpServlet
          }
          finally 
       	{
+      	 fileContent.close();
+      	 outputContent.close();
          out.close();  // Always close the output writer
         }
       } // end of doPost method
