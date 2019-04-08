@@ -83,8 +83,10 @@ public class QueryServlet extends HttpServlet
          }
          finally 
       	{
-      	 fileContent.close();
-      	 outputContent.close();
+      	 if(fileContent !=null)
+      	 {fileContent.close();}
+      	 if(outputContent !=null)
+      	 {outputContent.close();}
          out.close();  // Always close the output writer
         }
       } // end of doPost method
