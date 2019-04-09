@@ -33,7 +33,8 @@ public class QueryServlet extends HttpServlet
         // gets absolute path of the web application
         String appPath = request.getServletContext().getRealPath("");
         // constructs path of the directory to save uploaded file
-        String savePath = appPath + File.separator + SAVE_DIR;
+        //String savePath = appPath + File.separator + SAVE_DIR;
+        String savePath=SAVE_DIR;
         // Allocate a output writer to write the response message into the network socket
       	PrintWriter out = response.getWriter();
         File fileSaveDir = new File(savePath);
@@ -57,7 +58,7 @@ public class QueryServlet extends HttpServlet
          System.out.println("File name is: "+fileName);
 		 fileContent = filePart.getInputStream();
 		 // Write the file
-		 //fileName=savePath + File.separator + fileName;		 
+		 fileName=savePath + File.separator + fileName;		 
 		 //File fNew = new File(fileName);
 		 outputContent = new FileOutputStream(fileName);
 	     while((isRead = fileContent.read())!=-1) 
