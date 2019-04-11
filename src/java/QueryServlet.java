@@ -67,8 +67,22 @@ public class QueryServlet extends HttpServlet
 		 }
 		 outputContent.close();
 		 fileContent.close();
- 
-		 out.println("Writing File Done!");   
+ 		 out.println("The uploaded file has been written on the server ....");  
+ 		 out.println("Calling the union script on the server ...."); 
+ 		 String scriptPath = "/software/yap-6.2.2/distrib_new/";
+ 		 String script = "unionFeature.sh";
+ 		 try 
+ 		 {
+        	Process unionFeat = new ProcessBuilder("/bin/bash", scriptPath + script).start();
+        	unionFeat.waitFor();
+   		 } 
+   		 catch (Exception e) 
+   		 {
+        	// TODO Auto-generated catch block
+        	e.printStackTrace();
+   		 }
+ 		 out.println("Done! Server now has the union of the uploaded feature file and its local feature file ...."); 
+ 		 out.println("Build a local model on the server ....");
          out.println("</body>");
          out.println("</html>");
          } 
