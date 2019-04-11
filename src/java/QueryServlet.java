@@ -55,6 +55,8 @@ public class QueryServlet extends HttpServlet
          out.println("</head>");
          out.println("<body>");
          out.println("Uploaded Filename: " + fileName + "<br>");
+         out.println("<br>");
+         out.println("<br>");
          System.out.println("File name is: "+fileName);
 		 fileContent = filePart.getInputStream();
 		 // Write the file
@@ -68,12 +70,17 @@ public class QueryServlet extends HttpServlet
 		 outputContent.close();
 		 fileContent.close();
  		 out.println("The uploaded file has been written on the server ....");  
+ 		 out.println("<br>");
+ 		 out.println("<br>");
  		 out.println("Calling the union script on the server ...."); 
- 		 String scriptPath = "/software/yap-6.2.2/distrib_new/";
+ 		 out.println("<br>");
+ 		 out.println("<br>");
+ 		 String scriptPath = "software/yap-6.2.2/distrib_new/";
  		 String script = "unionFeature.sh";
  		 try 
  		 {
         	Process unionFeat = new ProcessBuilder("/bin/bash", scriptPath + script).start();
+        	System.out.println("Started the union script");
         	unionFeat.waitFor();
    		 } 
    		 catch (Exception e) 
@@ -82,7 +89,11 @@ public class QueryServlet extends HttpServlet
         	e.printStackTrace();
    		 }
  		 out.println("Done! Server now has the union of the uploaded feature file and its local feature file ...."); 
+ 		 out.println("<br>");
+ 		 out.println("<br>");
  		 out.println("Build a local model on the server ....");
+ 		 out.println("<br>");
+ 		 out.println("<br>");
          out.println("</body>");
          out.println("</html>");
          } 
