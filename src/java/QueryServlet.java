@@ -77,7 +77,7 @@ public class QueryServlet extends HttpServlet
  		 out.println("<br>");
  		 out.println("<br>");
  		 String scriptPath = "/software/yap-6.2.2/";
- 		 String script = "unionFeature.sh";
+ 		 String script = "./unionFeature.sh";
  		 try 
  		 {
         	//ProcessBuilder unionFeat = new ProcessBuilder("/bin/bash", scriptPath + script);
