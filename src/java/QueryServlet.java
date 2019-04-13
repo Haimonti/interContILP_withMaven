@@ -84,7 +84,7 @@ public class QueryServlet extends HttpServlet
         	System.out.println("Print the current directory "+unionFeat.directory());
         	Process pb = unionFeat.start();
         	System.out.println("Started the union script");
-        	unionFeat.waitFor();
+        	pb.waitFor();
    		 } 
    		 catch (Exception e) 
    		 {
