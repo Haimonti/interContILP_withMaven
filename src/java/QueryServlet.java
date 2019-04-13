@@ -80,7 +80,9 @@ public class QueryServlet extends HttpServlet
  		 String script = "unionFeature.sh";
  		 try 
  		 {
-        	Process unionFeat = new ProcessBuilder("/bin/bash", scriptPath + script).start();
+        	ProcessBuilder unionFeat = new ProcessBuilder("/bin/bash", scriptPath + script);
+        	System.out.println("Print the current directory "+unionFeat.directory());
+        	Process pb = unionFeat.start();
         	System.out.println("Started the union script");
         	unionFeat.waitFor();
    		 } 
