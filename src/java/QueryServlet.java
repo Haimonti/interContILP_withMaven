@@ -75,7 +75,7 @@ public class QueryServlet extends HttpServlet
  		 out.println("Calling the union script on the server ...."); 
  		 out.println("<br>");
  		 out.println("<br>");
- 		 String scriptPath = "software/yap-6.2.2/distrib_new/";
+ 		 String scriptPath = "software/yap-6.2.2/";
  		 String script = "unionFeature.sh";
  		 try 
  		 {
