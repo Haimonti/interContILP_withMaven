@@ -77,7 +77,7 @@ public class QueryServlet extends HttpServlet
  		 out.println("<br>");
  		 out.println("<br>");
  		 String scriptPath = "/software/yap-6.2.2/";
- 		 String script = "./unionFeature.sh";
+ 		 String script = "unionFeature.sh";
  		 try 
  		 {
         	//ProcessBuilder unionFeat = new ProcessBuilder("/bin/bash", scriptPath + script);
@@ -86,7 +86,7 @@ public class QueryServlet extends HttpServlet
         	// Set the working directory
         	unionFeat.directory(new File(System.getProperty("user.dir")+scriptPath));
         	System.out.println("Did it update the current directory? "+unionFeat.directory());
-        	unionFeat=new ProcessBuilder("/bin/bash",script);
+        	unionFeat=new ProcessBuilder("/bin/bash",unionFeat.directory()+script);
         	unionFeat.redirectErrorStream(true);
         	Process pb = unionFeat.start();
         	System.out.println("Started the union script");
