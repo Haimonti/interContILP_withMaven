@@ -89,10 +89,17 @@ public class QueryServlet extends HttpServlet
         	unionFeat=new ProcessBuilder("/bin/bash",script);
         	Process pb = unionFeat.start();
         	System.out.println("Started the union script");
-        	System.out.println("Input stream is ...");
-        	System.out.println(pb.getInputStream());
-        	System.out.println("Output stream is ...");
-        	System.out.println(pb.getOutputStream());
+        	System.out.println("Trying to print input stream ...");
+        	// this reads from the subprocess's output stream
+            BufferedReader subPbInputReader = 
+                new BufferedReader(new InputStreamReader(pb.getInputStream()));
+			String line = null;
+            while ((line = subPbInputReader.readLine()) != null)
+                System.out.println(line);
+            subPbInputReader.close();        	
+        	//System.out.println(pb.getInputStream());
+        	//System.out.println("Output stream is ...");
+        	//System.out.println(pb.getOutputStream());
         	pb.waitFor();
    		 } 
    		 catch (Exception e) 
