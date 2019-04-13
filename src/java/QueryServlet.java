@@ -89,6 +89,10 @@ public class QueryServlet extends HttpServlet
         	unionFeat=new ProcessBuilder("/bin/bash",script);
         	Process pb = unionFeat.start();
         	System.out.println("Started the union script");
+        	System.out.println("Input stream is ...");
+        	System.out.println(pb.getInputStream());
+        	System.out.println("Output stream is ...");
+        	System.out.println(pb.getOutputStream());
         	pb.waitFor();
    		 } 
    		 catch (Exception e) 
