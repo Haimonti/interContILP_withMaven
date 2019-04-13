@@ -87,9 +87,9 @@ public class QueryServlet extends HttpServlet
         	// Set the working directory
         	unionFeat.directory(new File(System.getProperty("user.dir")+scriptPath));
         	System.out.println("Did it update the current directory? "+unionFeat.directory());
-        	String currFeatServer =unionFeat.directory()+"feature_server.pl";
+        	String currFeatServer =unionFeat.directory()+File.separator+"feature_server.pl";
  		 	String uploadFeat = "../../uploadFiles/feature_local.pl";
- 		    String outFile=unionFeat.directory()+"feature_union_v1a.pl";
+ 		    String outFile=unionFeat.directory()+File.separator+"feature_union_v1a.pl";
         	unionFeat=new ProcessBuilder("/bin/bash",unionFeat.directory()+File.separator+script,currFeatServer,uploadFeat,outFile);
         	unionFeat.redirectErrorStream(true);
         	Process pb = unionFeat.start();
