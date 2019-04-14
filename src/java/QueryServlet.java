@@ -91,7 +91,7 @@ public class QueryServlet extends HttpServlet
  		 	String uploadFeat = "../../uploadFiles/feature_local.pl";
  		    String outFile=unionFeat.directory()+File.separator+"feature_union_v1a.pl";
  		    // you need a shell to execute a command pipeline
-    		List<String> commands = new ArrayList<String>();
+    		/*List<String> commands = new ArrayList<String>();
     		commands.add("/bin/bash");
     		commands.add("-c");
     		commands.add("cp " +currFeatServer+ " features.pl");
@@ -104,8 +104,8 @@ public class QueryServlet extends HttpServlet
  		    commands.add("mv features_union.pl features.pl");
  		    commands.add("shift");
  		    commands.add("cat features.pl | grep -v " +"features from "+">"+outFile);
- 		    unionFeat=new ProcessBuilder(commands);
- 		    //unionFeat=new ProcessBuilder("/bin/bash",unionFeat.directory()+File.separator+script,currFeatServer,uploadFeat,outFile);
+ 		    unionFeat=new ProcessBuilder(commands);*/
+ 		    unionFeat=new ProcessBuilder("/bin/bash",unionFeat.directory()+File.separator+script,currFeatServer,uploadFeat,outFile);
         	unionFeat.redirectErrorStream(true);
         	Process pb = unionFeat.start();
         	System.out.println("Started the union script");
