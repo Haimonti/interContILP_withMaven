@@ -110,16 +110,28 @@ public class QueryServlet extends HttpServlet
         	Process pb = unionFeat.start();
         	System.out.println("Started the union script");
         	System.out.println("Trying to print input stream ...");
+        	
         	// this reads from the subprocess's input stream
             BufferedReader subPbInputReader = 
                 new BufferedReader(new InputStreamReader(pb.getInputStream()));
 			String line = null;
             while ((line = subPbInputReader.readLine()) != null)
                 System.out.println(line);
-            subPbInputReader.close();    
+            subPbInputReader.close();  
+            
             // Get the output stream
-            //OutputStream out = pb.getOutputStream(); 
-      		// close the output stream 
+            OutputStream outSt = pb.getOutputStream(); 
+            outSt.close();
+            
+            // this reads from the subprocess's error stream
+            BufferedReader subPbErrorReader = 
+                new BufferedReader(new InputStreamReader(pb.getErrorStream()));
+			String lineEr = null;
+            while ((lineEr = subPbErrorReader.readLine()) != null)
+                System.out.println(lineEr);
+            subPbErrorReader.close();  
+        
+            // close the output stream 
             //System.out.println("Closing the output stream"); 
             //out.close();  	
         	//System.out.println(pb.getInputStream());
