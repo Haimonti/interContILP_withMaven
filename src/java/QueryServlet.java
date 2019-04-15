@@ -63,8 +63,8 @@ public class QueryServlet extends HttpServlet
 		 fileContent = filePart.getInputStream();
 		 // Write the file
 		 fileName=savePath + File.separator + fileName;		 
-		 //File fNew = new File(fileName);
-		 outputContent = new FileOutputStream(fileName);
+		 File fNew = new File(fileName);
+		 outputContent = new FileOutputStream(fNew);
 	     while((isRead = fileContent.read())!=-1) 
 		 {
 		  outputContent.write(isRead);
