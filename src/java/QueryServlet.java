@@ -65,10 +65,15 @@ public class QueryServlet extends HttpServlet
 		 fileName=savePath + File.separator + fileName;		 
 		 File fNew = new File(fileName);
 		 outputContent = new FileOutputStream(fNew);
+		 if (!fNew.exists()) 
+		 {
+	       fNew.createNewFile();
+	  	  }
 	     while((isRead = fileContent.read())!=-1) 
 		 {
 		  outputContent.write(isRead);
 		 }
+		 outputContent.flush();
 		 outputContent.close();
 		 fileContent.close();
  		 out.println("The uploaded file has been written on the server ....");  
