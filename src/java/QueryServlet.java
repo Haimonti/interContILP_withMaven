@@ -1,12 +1,5 @@
 // To save as "<TOMCAT_HOME>\webapps\hello\WEB-INF\classes\QueryServlet.java".
 
-//import com.google.cloud.storage.Acl;
-//import com.google.cloud.storage.Acl.Role;
-//import com.google.cloud.storage.Acl.User;
-//import com.google.cloud.storage.BlobInfo;
-//import com.google.cloud.storage.Storage;
-//import com.google.cloud.storage.StorageOptions;
-
 //[START gcs_imports]
 import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
@@ -25,12 +18,6 @@ import java.nio.file.Paths;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.FileOutputStream;
-
-//import org.apache.commons.fileupload.FileItem;
-//import org.apache.commons.fileupload.FileUploadException;
-//import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-//import org.apache.commons.fileupload.servlet.ServletFileUpload;
-//import org.apache.commons.io.output.*;
 
 public class QueryServlet extends HttpServlet 
 {  
@@ -60,11 +47,11 @@ public class QueryServlet extends HttpServlet
          throws IOException, ServletException 
      	{ 
      	
-     	GcsFileOptions instance = GcsFileOptions.getDefaultInstance();
-     	System.out.println("Instance is: "+instance);
-    	GcsFilename fileName = getFileName(request);
-    	System.out.println("File name is: "+fileName);
-   	    GcsOutputChannel outputChannel;
+     	//GcsFileOptions instance = GcsFileOptions.getDefaultInstance();
+     	//System.out.println("Instance is: "+instance);
+    	//GcsFilename fileName = getFileName(request);
+    	//System.out.println("File name is: "+fileName);
+   	    //GcsOutputChannel outputChannel;
     	
         // gets absolute path of the web application
         //String appPath = request.getServletContext().getRealPath("");
@@ -116,10 +103,10 @@ public class QueryServlet extends HttpServlet
          //Return public download link
          //String pubLink = blobInfo.getMediaLink();     
 		 // Write the file
-		 outputChannel = gcsService.createOrReplace(fileName, instance);
-    	 copy(request.getInputStream(), Channels.newOutputStream(outputChannel));
-		 fileName=savePath + File.separator + fileName;		 
-		 File fNew = new File(fileName);
+		 //outputChannel = gcsService.createOrReplace(fileName, instance);
+    	 //copy(request.getInputStream(), Channels.newOutputStream(outputChannel));
+		 //fileName=savePath + File.separator + fileName;		 
+		 /**File fNew = new File(fileName);
 		 outputContent = new FileOutputStream(fNew);
 		 if (!fNew.exists()) 
 		 {
@@ -132,7 +119,7 @@ public class QueryServlet extends HttpServlet
 		 }
 		 outputContent.flush();
 		 outputContent.close();
-		 fileContent.close(); 
+		 fileContent.close(); **/
  		 out.println("The uploaded file has been written on the server ....");  
  		 out.println("<br>");
  		 out.println("<br>");
@@ -238,9 +225,9 @@ public class QueryServlet extends HttpServlet
 			 DateTimeFormatter dtf = DateTimeFormat.forPattern("-YYYY-MM-dd-HHmmssSSS");
 			 DateTime dt = DateTime.now(DateTimeZone.UTC);
 			 String dtString = dt.toString(dtf);
-			final String fileName =
+			final String fName =
 			  dtString + content.substring(content.indexOf('=') + 1).trim().replace("\"", "");
-			return fileName;
+			return fName;
     		}
   		}
   		return null;
