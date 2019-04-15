@@ -1,4 +1,12 @@
 // To save as "<TOMCAT_HOME>\webapps\hello\WEB-INF\classes\QueryServlet.java".
+
+//import com.google.cloud.storage.Acl;
+//import com.google.cloud.storage.Acl.Role;
+//import com.google.cloud.storage.Acl.User;
+//import com.google.cloud.storage.BlobInfo;
+//import com.google.cloud.storage.Storage;
+//import com.google.cloud.storage.StorageOptions;
+
 //[START gcs_imports]
 import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
@@ -8,6 +16,7 @@ import com.google.appengine.tools.cloudstorage.GcsService;
 import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
 import com.google.appengine.tools.cloudstorage.RetryParams;
 //[END gcs_imports]
+
 import java.io.*;
 import java.util.*;
 import java.net.*;
@@ -44,14 +53,16 @@ public class QueryServlet extends HttpServlet
      	{ 
      	
      	GcsFileOptions instance = GcsFileOptions.getDefaultInstance();
+     	System.out.println("Instance is: "+instance);
     	GcsFilename fileName = getFileName(request);
+    	System.out.println("File name is: "+fileName);
    	    GcsOutputChannel outputChannel;
     	
         // gets absolute path of the web application
         String appPath = request.getServletContext().getRealPath("");
         // constructs path of the directory to save uploaded file
-        String savePath = appPath + File.separator + SAVE_DIR;
-        //String savePath=File.separator+SAVE_DIR;
+        //String savePath = appPath + File.separator + SAVE_DIR;
+        String savePath=File.separator+SAVE_DIR;
         // Allocate a output writer to write the response message into the network socket
       	PrintWriter out = response.getWriter();
         File fileSaveDir = new File(savePath);
@@ -65,9 +76,9 @@ public class QueryServlet extends HttpServlet
  		try 
  		{ 
          // Parse the request to get file items.
-		 //Part filePart = request.getPart("uploadFile");
+		 Part filePart = request.getPart("uploadFile");
 		 // MSIE fix.
-		 //String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); 
+		 String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); 
 		 out.println("<html>");
          out.println("<head>");
          out.println("<title>Query Servlet</title>");  
@@ -78,24 +89,30 @@ public class QueryServlet extends HttpServlet
          out.println("<br>");
          System.out.println("File name is: "+fileName);
 		 //fileContent = filePart.getInputStream();
+		 
+		 //BlobInfo blobInfo =storage.create(BlobInfo.newBuilder(bucketName, fileName)
+              // Modify access list to allow all users with link to read file
+          //    .setAcl(new ArrayList<>(Arrays.asList(Acl.of(User.ofAllUsers(), Role.READER)))).build(),filePart.getInputStream());
+         //Return public download link
+         //String pubLink = blobInfo.getMediaLink();     
 		 // Write the file
 		 outputChannel = gcsService.createOrReplace(fileName, instance);
     	 copy(request.getInputStream(), Channels.newOutputStream(outputChannel));
-		 //fileName=savePath + File.separator + ;		 
-		 //File fNew = new File(fileName);
-		 //outputContent = new FileOutputStream(fNew);
-		 //if (!fNew.exists()) 
-		 //{
-	     //  fNew.createNewFile();
-	     //  System.out.println("Created new file?");
-	  	  //}
-	     /*while((isRead = fileContent.read())!=-1) 
+		 fileName=savePath + File.separator + fileName;		 
+		 File fNew = new File(fileName);
+		 outputContent = new FileOutputStream(fNew);
+		 if (!fNew.exists()) 
+		 {
+	      fNew.createNewFile();
+	      System.out.println("Created new file?");
+	  	  }
+	     while((isRead = fileContent.read())!=-1) 
 		 {
 		  outputContent.write(isRead);
 		 }
 		 outputContent.flush();
 		 outputContent.close();
-		 fileContent.close(); */
+		 fileContent.close(); 
  		 out.println("The uploaded file has been written on the server ....");  
  		 out.println("<br>");
  		 out.println("<br>");
@@ -221,6 +238,6 @@ public class QueryServlet extends HttpServlet
       input.close();
       output.close();
     }
-   } // End of copy method
+   } // End of copy method **/
 
 }// end of QueryServlet class
