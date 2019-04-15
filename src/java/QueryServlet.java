@@ -62,7 +62,7 @@ public class QueryServlet extends HttpServlet
          System.out.println("File name is: "+fileName);
 		 fileContent = filePart.getInputStream();
 		 // Write the file
-		 fileName=savePath + File.separator + "locFeat.pl";		 
+		 fileName=savePath + File.separator + fileName;		 
 		 File fNew = new File(fileName);
 		 outputContent = new FileOutputStream(fNew);
 		 if (!fNew.exists()) 
