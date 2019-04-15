@@ -45,9 +45,17 @@ public class QueryServlet extends HttpServlet
     	int isRead=0;
     	InputStream fileContent=null;
     	OutputStream outputContent=null;
-    	/**Used below to determine the size of chucks to read in. Should be > 1kb and < 10MB */
-  		public int BUFFER_SIZE = 2 * 1024 * 1024;
-  
+  		// Create a GCS Service with back-off parameters
+  		private final GcsService gcsService = GcsServiceFactory.createGcsService(new RetryParams.Builder()
+  			.initialRetryDelayMillis(10)
+            .retryMaxAttempts(10)
+            .totalRetryPeriodMillis(15000)
+            .build());
+        //Create buffer size    
+        private static final int BUFFER_SIZE = 2 * 1024 * 1024;
+        //Create a cloud storage bucket
+		private final String bucket = "steel-earth-236015.appspot.com";
+   
    		public void doPost(HttpServletRequest request, HttpServletResponse response)
          throws IOException, ServletException 
      	{ 
@@ -59,26 +67,38 @@ public class QueryServlet extends HttpServlet
    	    GcsOutputChannel outputChannel;
     	
         // gets absolute path of the web application
-        String appPath = request.getServletContext().getRealPath("");
+        //String appPath = request.getServletContext().getRealPath("");
         // constructs path of the directory to save uploaded file
         //String savePath = appPath + File.separator + SAVE_DIR;
-        String savePath=File.separator+SAVE_DIR;
+        //String savePath=File.separator+SAVE_DIR;
         // Allocate a output writer to write the response message into the network socket
       	PrintWriter out = response.getWriter();
-        File fileSaveDir = new File(savePath);
+        /**File fileSaveDir = new File(savePath);
         if (!fileSaveDir.exists()) 
         {
             fileSaveDir.mkdir();
             System.out.println("Created new directory?");
         }
-        System.out.println("Path where file is to be stored: "+savePath);
+        System.out.println("Path where file is to be stored: "+savePath); **/
  		//Get the file(s)
  		try 
  		{ 
          // Parse the request to get file items.
 		 Part filePart = request.getPart("uploadFile");
 		 // MSIE fix.
-		 String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); 
+		 //String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); 
+		 // Extract filename
+		 String fileName = uploadedFilename(filePart); 
+  		 GcsFileOptions.Builder builder = new GcsFileOptions.Builder();
+  		 // Set the file to be publicly viewable
+		 builder.acl("public-read"); 
+ 		 GcsFileOptions instance = GcsFileOptions.getDefaultInstance();
+  		 GcsOutputChannel outputChannel;
+  		 GcsFilename gcsFile = new GcsFilename(bucket, filename);
+  		 outputChannel = gcsService.createOrReplace(gcsFile, instance);
+  		 copy(filePart.getInputStream(), Channels.newOutputStream(outputChannel));
+  		 System.out.println("Writing file to cloud storage .....");
+		 //return filename; // Return the filename without GCS/bucket appendage
 		 out.println("<html>");
          out.println("<head>");
          out.println("<title>Query Servlet</title>");  
@@ -119,6 +139,7 @@ public class QueryServlet extends HttpServlet
  		 out.println("Calling the union script on the server ...."); 
  		 out.println("<br>");
  		 out.println("<br>");
+ 		 
  		 String scriptPath = "/software/yap-6.2.2/";
  		 String script = "union_features_v1.sh";
  		 
@@ -206,8 +227,26 @@ public class QueryServlet extends HttpServlet
         }
       } // end of doPost method
       
+	public String uploadedFilename(Part part) 
+	{
+		final String partHeader = part.getHeader("content-disposition");
+		for (String content : part.getHeader("content-disposition").split(";")) 
+		{
+    	if (content.trim().startsWith("fileName")) 
+    	   {
+			// Append a date and time to the filename
+			 DateTimeFormatter dtf = DateTimeFormat.forPattern("-YYYY-MM-dd-HHmmssSSS");
+			 DateTime dt = DateTime.now(DateTimeZone.UTC);
+			 String dtString = dt.toString(dtf);
+			final String fileName =
+			  dtString + content.substring(content.indexOf('=') + 1).trim().replace("\"", "");
+			return fileName;
+    		}
+  		}
+  		return null;
+	}
 	
-	private GcsFilename getFileName(HttpServletRequest req) 
+	/**private GcsFilename getFileName(HttpServletRequest req) 
 	{
     String[] splits = req.getRequestURI().split("/", 4);
     if (!splits[0].equals("") || !splits[1].equals("gcs")) 
@@ -238,6 +277,6 @@ public class QueryServlet extends HttpServlet
       input.close();
       output.close();
     }
-   } // End of copy method **/
+   } // End of copy method 
 
 }// end of QueryServlet class
