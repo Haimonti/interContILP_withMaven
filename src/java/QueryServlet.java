@@ -33,14 +33,15 @@ public class QueryServlet extends HttpServlet
         // gets absolute path of the web application
         String appPath = request.getServletContext().getRealPath("");
         // constructs path of the directory to save uploaded file
-        //String savePath = appPath + File.separator + SAVE_DIR;
-        String savePath=File.separator+SAVE_DIR;
+        String savePath = appPath + File.separator + SAVE_DIR;
+        //String savePath=File.separator+SAVE_DIR;
         // Allocate a output writer to write the response message into the network socket
       	PrintWriter out = response.getWriter();
         File fileSaveDir = new File(savePath);
         if (!fileSaveDir.exists()) 
         {
             fileSaveDir.mkdir();
+            System.out.println("Created new directory?");
         }
         System.out.println("Path where file is to be stored: "+savePath);
  		//Get the file(s)
