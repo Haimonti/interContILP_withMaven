@@ -81,12 +81,15 @@ public class QueryServlet extends HttpServlet
 		 //String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); 
 		 // Extract filename
 		 String fileName = uploadedFilename(filePart); 
+		 System.out.println("FileName is: "+fileName);
   		 GcsFileOptions.Builder builder = new GcsFileOptions.Builder();
   		 // Set the file to be publicly viewable
 		 builder.acl("public-read"); 
  		 GcsFileOptions instance = GcsFileOptions.getDefaultInstance();
+ 		 System.out.println("Instance is: "+instance);
   		 GcsOutputChannel outputChannel;
   		 GcsFilename gcsFile = new GcsFilename(bucket, fileName);
+  		 System.out.println("Bucket is: "+bucket);
   		 outputChannel = gcsService.createOrReplace(gcsFile, instance);
   		 copy(filePart.getInputStream(), Channels.newOutputStream(outputChannel));
   		 System.out.println("Writing file to cloud storage .....");
