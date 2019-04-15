@@ -1,4 +1,13 @@
 // To save as "<TOMCAT_HOME>\webapps\hello\WEB-INF\classes\QueryServlet.java".
+//[START gcs_imports]
+import com.google.appengine.tools.cloudstorage.GcsFileOptions;
+import com.google.appengine.tools.cloudstorage.GcsFilename;
+import com.google.appengine.tools.cloudstorage.GcsInputChannel;
+import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
+import com.google.appengine.tools.cloudstorage.GcsService;
+import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
+import com.google.appengine.tools.cloudstorage.RetryParams;
+//[END gcs_imports]
 import java.io.*;
 import java.util.*;
 import java.net.*;
@@ -27,14 +36,22 @@ public class QueryServlet extends HttpServlet
     	int isRead=0;
     	InputStream fileContent=null;
     	OutputStream outputContent=null;
+    	/**Used below to determine the size of chucks to read in. Should be > 1kb and < 10MB */
+  		public int BUFFER_SIZE = 2 * 1024 * 1024;
+  
    		public void doPost(HttpServletRequest request, HttpServletResponse response)
          throws IOException, ServletException 
      	{ 
+     	
+     	GcsFileOptions instance = GcsFileOptions.getDefaultInstance();
+    	GcsFilename fileName = getFileName(request);
+   	    GcsOutputChannel outputChannel;
+    	
         // gets absolute path of the web application
         String appPath = request.getServletContext().getRealPath("");
         // constructs path of the directory to save uploaded file
-        //String savePath = appPath + File.separator + SAVE_DIR;
-        String savePath=File.separator+SAVE_DIR;
+        String savePath = appPath + File.separator + SAVE_DIR;
+        //String savePath=File.separator+SAVE_DIR;
         // Allocate a output writer to write the response message into the network socket
       	PrintWriter out = response.getWriter();
         File fileSaveDir = new File(savePath);
@@ -48,9 +65,9 @@ public class QueryServlet extends HttpServlet
  		try 
  		{ 
          // Parse the request to get file items.
-		 Part filePart = request.getPart("uploadFile");
+		 //Part filePart = request.getPart("uploadFile");
 		 // MSIE fix.
-		 String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); 
+		 //String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); 
 		 out.println("<html>");
          out.println("<head>");
          out.println("<title>Query Servlet</title>");  
@@ -60,23 +77,25 @@ public class QueryServlet extends HttpServlet
          out.println("<br>");
          out.println("<br>");
          System.out.println("File name is: "+fileName);
-		 fileContent = filePart.getInputStream();
+		 //fileContent = filePart.getInputStream();
 		 // Write the file
-		 fileName=savePath + File.separator + fileName;		 
-		 File fNew = new File(fileName);
-		 outputContent = new FileOutputStream(fNew);
-		 if (!fNew.exists()) 
-		 {
-	       fNew.createNewFile();
-	       System.out.println("Created new file?");
-	  	  }
-	     while((isRead = fileContent.read())!=-1) 
+		 outputChannel = gcsService.createOrReplace(fileName, instance);
+    	 copy(request.getInputStream(), Channels.newOutputStream(outputChannel));
+		 //fileName=savePath + File.separator + ;		 
+		 //File fNew = new File(fileName);
+		 //outputContent = new FileOutputStream(fNew);
+		 //if (!fNew.exists()) 
+		 //{
+	     //  fNew.createNewFile();
+	     //  System.out.println("Created new file?");
+	  	  //}
+	     /*while((isRead = fileContent.read())!=-1) 
 		 {
 		  outputContent.write(isRead);
 		 }
 		 outputContent.flush();
 		 outputContent.close();
-		 fileContent.close();
+		 fileContent.close(); */
  		 out.println("The uploaded file has been written on the server ....");  
  		 out.println("<br>");
  		 out.println("<br>");
@@ -169,4 +188,39 @@ public class QueryServlet extends HttpServlet
       	 out.close();  // Always close the output writer
         }
       } // end of doPost method
+      
+	
+	private GcsFilename getFileName(HttpServletRequest req) 
+	{
+    String[] splits = req.getRequestURI().split("/", 4);
+    if (!splits[0].equals("") || !splits[1].equals("gcs")) 
+    {
+      throw new IllegalArgumentException("The URL is not formed as expected. " +
+          "Expecting /gcs/<bucket>/<object>");
+    }
+    return new GcsFilename(splits[2], splits[3]);
+  	} // End of getFileName method
+  
+  /**
+   * Transfer the data from the inputStream to the outputStream. Then close both streams.
+   */
+  private void copy(InputStream input, OutputStream output) throws IOException 
+  {
+    try 
+    {
+      byte[] buffer = new byte[BUFFER_SIZE];
+      int bytesRead = input.read(buffer);
+      while (bytesRead != -1) 
+      {
+        output.write(buffer, 0, bytesRead);
+        bytesRead = input.read(buffer);
+      }
+    } 
+    finally 
+    {
+      input.close();
+      output.close();
+    }
+   } // End of copy method
+
 }// end of QueryServlet class
