@@ -14,6 +14,9 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 import java.nio.file.Paths;
+import java.nio.channels;
+import java.time.format;
+import java.time.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -81,7 +84,7 @@ public class QueryServlet extends HttpServlet
 		 builder.acl("public-read"); 
  		 GcsFileOptions instance = GcsFileOptions.getDefaultInstance();
   		 GcsOutputChannel outputChannel;
-  		 GcsFilename gcsFile = new GcsFilename(bucket, filename);
+  		 GcsFilename gcsFile = new GcsFilename(bucket, fileName);
   		 outputChannel = gcsService.createOrReplace(gcsFile, instance);
   		 copy(filePart.getInputStream(), Channels.newOutputStream(outputChannel));
   		 System.out.println("Writing file to cloud storage .....");
