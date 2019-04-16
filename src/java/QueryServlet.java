@@ -169,7 +169,7 @@ public class QueryServlet extends HttpServlet
  		    unionFeat=new ProcessBuilder(unionFeat.directory()+File.separator+script,currFeatServer,uploadFeat,outFile);
         	unionFeat.redirectErrorStream(true);
         	Process pb = unionFeat.start();
-        	System.out.println("Started the union script");
+        	System.out.println("Started the union script without /bin/bash");
         	System.out.println("Trying to print input stream ...");
         	
         	// this reads from the subprocess's input stream
