@@ -43,6 +43,11 @@
 			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+		  <groupId>com.google.cloud</groupId>
+		  <artifactId>google-cloud-storage</artifactId>
+		  <version>1.62.0</version>
+		</dependency>
 	</dependencies>
 	
 	<build>
@@ -85,5 +90,7 @@
     			<version>9.3.7.v20160115</version>
   			 </plugin>
         </plugins>
+
+	
     </build>
 </project>
