@@ -37,23 +37,22 @@ public class QueryServlet extends HttpServlet
     	int isRead=0;
     	InputStream fileContent=null;
     	OutputStream outputContent=null;
-  		
-   		public void doPost(HttpServletRequest request, HttpServletResponse response)
-         throws IOException, ServletException 
-     	{ 
-     	  // Create a GCS Service with back-off parameters
-     	  //private final 
-  		  GcsService gcsService = GcsServiceFactory.createGcsService(new RetryParams.Builder()
+    	// Create a GCS Service with back-off parameters
+     	private final GcsService gcsService = GcsServiceFactory.createGcsService(new RetryParams.Builder()
   			.initialRetryDelayMillis(10)
             .retryMaxAttempts(10)
             .totalRetryPeriodMillis(15000)
             .build());
           //Create buffer size    
-          //private static final int BUFFER_SIZE = 2 * 1024 * 1024;
-          int BUFFER_SIZE = 2 * 1024 * 1024;
+        private static final int BUFFER_SIZE = 2 * 1024 * 1024;
           //Create a cloud storage bucket
-		  //private final String bucket = "steel-earth-236015.appspot.com";
-   		  String bucket = "steel-earth-236015.appspot.com";
+		private final String bucket = "steel-earth-236015.appspot.com";
+   		  
+  		
+   		public void doPost(HttpServletRequest request, HttpServletResponse response)
+         throws IOException, ServletException 
+     	{ 
+     	  
      	//GcsFileOptions instance = GcsFileOptions.getDefaultInstance();
      	//System.out.println("Instance is: "+instance);
     	//GcsFilename fileName = getFileName(request);
@@ -82,7 +81,7 @@ public class QueryServlet extends HttpServlet
 		 // MSIE fix.
 		 String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); 
 		 // Extract filename
-		 String fileName = uploadedFilename(filePart); 
+		 //String fileName = uploadedFilename(filePart); 
 		 System.out.println("FileName is: "+fileName);
   		 GcsFileOptions.Builder builder = new GcsFileOptions.Builder();
   		 // Set the file to be publicly viewable
