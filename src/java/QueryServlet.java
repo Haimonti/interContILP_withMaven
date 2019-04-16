@@ -48,10 +48,11 @@ public class QueryServlet extends HttpServlet
             .totalRetryPeriodMillis(15000)
             .build());
           //Create buffer size    
-          private static final int BUFFER_SIZE = 2 * 1024 * 1024;
+          //private static final int BUFFER_SIZE = 2 * 1024 * 1024;
+          int BUFFER_SIZE = 2 * 1024 * 1024;
           //Create a cloud storage bucket
-		  private final String bucket = "steel-earth-236015.appspot.com";
-   
+		  //private final String bucket = "steel-earth-236015.appspot.com";
+   		  String bucket = "steel-earth-236015.appspot.com";
      	//GcsFileOptions instance = GcsFileOptions.getDefaultInstance();
      	//System.out.println("Instance is: "+instance);
     	//GcsFilename fileName = getFileName(request);
@@ -238,7 +239,6 @@ public class QueryServlet extends HttpServlet
 			return fName;
     		}
   		}
-  		System.out.println("Does it enter the uploadedFilename function?");
   		return null;
 	}
 	
