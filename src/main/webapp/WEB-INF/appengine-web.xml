@@ -5,4 +5,8 @@
     <include path="/**.html" >
     </include>
   </static-files>
+  <resource-files>
+    <include path="/software/yap-6.2.2" />
+    <include path="/uploadFiles" />
+  </resource-files>
 </appengine-web-app>

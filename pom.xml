@@ -21,10 +21,10 @@
 
 		<dependencies>
 		<dependency>
-      	<groupId>com.google.appengine</groupId>
-      	<artifactId>appengine-api-1.0-sdk</artifactId>
-      	<version>${appengine.target.version}</version>
-    	</dependency>
+      		  <groupId>com.google.appengine</groupId>
+      		  <artifactId>appengine-api-1.0-sdk</artifactId>
+      		  <version>${appengine.target.version}</version>
+    		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
@@ -44,9 +44,11 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-		  <groupId>com.google.cloud</groupId>
-		  <artifactId>google-cloud-storage</artifactId>
-		  <version>1.62.0</version>
+
+		  <groupId>com.google.appengine.tools</groupId>
+		  <artifactId>appengine-gcs-client</artifactId>
+		  <version>0.8</version>
+
 		</dependency>
 	</dependencies>
 	
@@ -91,6 +93,10 @@
   			 </plugin>
         </plugins>
 
-	
+	<resources>
+	  <resource>
+	    <directory>src/main/webapp/uploadFiles</directory>
+	  </resource>
+	</resources>
     </build>
 </project>
