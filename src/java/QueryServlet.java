@@ -37,21 +37,21 @@ public class QueryServlet extends HttpServlet
     	int isRead=0;
     	InputStream fileContent=null;
     	OutputStream outputContent=null;
-  		// Create a GCS Service with back-off parameters
-  		private final GcsService gcsService = GcsServiceFactory.createGcsService(new RetryParams.Builder()
+  		
+   		public void doPost(HttpServletRequest request, HttpServletResponse response)
+         throws IOException, ServletException 
+     	{ 
+     	  // Create a GCS Service with back-off parameters
+  		  private final GcsService gcsService = GcsServiceFactory.createGcsService(new RetryParams.Builder()
   			.initialRetryDelayMillis(10)
             .retryMaxAttempts(10)
             .totalRetryPeriodMillis(15000)
             .build());
-        //Create buffer size    
-        private static final int BUFFER_SIZE = 2 * 1024 * 1024;
-        //Create a cloud storage bucket
-		private final String bucket = "steel-earth-236015.appspot.com";
+          //Create buffer size    
+          private static final int BUFFER_SIZE = 2 * 1024 * 1024;
+          //Create a cloud storage bucket
+		  private final String bucket = "steel-earth-236015.appspot.com";
    
-   		public void doPost(HttpServletRequest request, HttpServletResponse response)
-         throws IOException, ServletException 
-     	{ 
-     	
      	//GcsFileOptions instance = GcsFileOptions.getDefaultInstance();
      	//System.out.println("Instance is: "+instance);
     	//GcsFilename fileName = getFileName(request);
@@ -78,7 +78,7 @@ public class QueryServlet extends HttpServlet
          // Parse the request to get file items.
 		 Part filePart = request.getPart("uploadFile");
 		 // MSIE fix.
-		 //String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); 
+		 String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); 
 		 // Extract filename
 		 String fileName = uploadedFilename(filePart); 
 		 System.out.println("FileName is: "+fileName);
@@ -238,6 +238,7 @@ public class QueryServlet extends HttpServlet
 			return fName;
     		}
   		}
+  		System.out.println("Does it enter the uploadedFilename function?");
   		return null;
 	}
 	
