@@ -147,9 +147,9 @@ public class QueryServlet extends HttpServlet
         	// Set the working directory
         	unionFeat.directory(new File(System.getProperty("user.dir")+scriptPath));
         	System.out.println("Did it update the current directory? "+unionFeat.directory());
-        	//String currFeatServer =unionFeat.directory()+File.separator+"feature_server.pl";
+        	String currFeatServer =unionFeat.directory()+File.separator+"feature_server.pl";
  		 	String uploadFeat = "../../uploadFiles/feature_local.pl";
- 		 	String uploadFeat=bucket+File.separator+"feature_local.pl";
+ 		 	//String uploadFeat=bucket+File.separator+"feature_local.pl";
  		    String outFile=unionFeat.directory()+File.separator+"feature_union_v1a.pl";
  		    // you need a shell to execute a command pipeline
     		/*List<String> commands = new ArrayList<String>();
