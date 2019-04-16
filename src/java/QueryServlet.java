@@ -145,7 +145,7 @@ public class QueryServlet extends HttpServlet
         	ProcessBuilder unionFeat = new ProcessBuilder();
         	System.out.println("Print the current directory "+unionFeat.directory());
         	// Set the working directory
-        	unionFeat.directory(new File(System.getProperty("user.home")+scriptPath));
+        	unionFeat.directory(new File(System.getProperty("user.dir")+scriptPath));
         	System.out.println("Did it update the current directory? "+unionFeat.directory());
         	String currFeatServer =unionFeat.directory()+File.separator+"feature_server.pl";
  		 	//String uploadFeat = "../../uploadFiles/feature_local.pl";
@@ -166,7 +166,8 @@ public class QueryServlet extends HttpServlet
  		    commands.add("shift");
  		    commands.add("cat features.pl | grep -v " +"features from "+">"+outFile);
  		    unionFeat=new ProcessBuilder(commands);*/
- 		    unionFeat=new ProcessBuilder(unionFeat.directory()+File.separator+script,currFeatServer,uploadFeat,outFile);
+ 		    //unionFeat=new ProcessBuilder("/bin/bash"+unionFeat.directory()+File.separator+script,currFeatServer,uploadFeat,outFile);
+        	unionFeat=new ProcessBuilder("/bin/bash",bucket+scriptPath+script,currFeatServer,uploadFeat,outFile);
         	unionFeat.redirectErrorStream(true);
         	Process pb = unionFeat.start();
         	System.out.println("Started the union script without /bin/bash");
