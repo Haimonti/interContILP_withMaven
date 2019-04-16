@@ -166,7 +166,7 @@ public class QueryServlet extends HttpServlet
  		    commands.add("shift");
  		    commands.add("cat features.pl | grep -v " +"features from "+">"+outFile);
  		    unionFeat=new ProcessBuilder(commands);*/
- 		    unionFeat=new ProcessBuilder("/google/google-cloud-sdk/bin/bash",unionFeat.directory()+File.separator+script,currFeatServer,uploadFeat,outFile);
+ 		    unionFeat=new ProcessBuilder("/bin/bash",unionFeat.directory()+File.separator+script,currFeatServer,uploadFeat,outFile);
         	unionFeat.redirectErrorStream(true);
         	Process pb = unionFeat.start();
         	System.out.println("Started the union script");
