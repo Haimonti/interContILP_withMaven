@@ -42,7 +42,8 @@ public class QueryServlet extends HttpServlet
          throws IOException, ServletException 
      	{ 
      	  // Create a GCS Service with back-off parameters
-  		  private final GcsService gcsService = GcsServiceFactory.createGcsService(new RetryParams.Builder()
+     	  //private final 
+  		  GcsService gcsService = GcsServiceFactory.createGcsService(new RetryParams.Builder()
   			.initialRetryDelayMillis(10)
             .retryMaxAttempts(10)
             .totalRetryPeriodMillis(15000)
