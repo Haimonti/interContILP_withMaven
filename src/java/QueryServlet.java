@@ -168,7 +168,7 @@ public class QueryServlet extends HttpServlet
  		    commands.add("shift");
  		    commands.add("cat features.pl | grep -v " +"features from "+">"+outFile);
  		    unionFeat=new ProcessBuilder(commands);*/
- 		    unionFeat=new ProcessBuilder("/bin/bash",bucket+scriptPath+script,currFeatServer,uploadFeat,outFile);
+ 		    unionFeat=new ProcessBuilder("../../../bin/bash",bucket+scriptPath+script,currFeatServer,uploadFeat,outFile);
         	//unionFeat=new ProcessBuilder("/bin/bash",bucket+scriptPath+script,currFeatServer,uploadFeat,outFile);
         	unionFeat.redirectErrorStream(true);
         	Process pb = unionFeat.start();
