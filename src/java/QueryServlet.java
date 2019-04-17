@@ -157,8 +157,8 @@ public class QueryServlet extends HttpServlet
  		    String outFile=bucket+scriptPath+"feature_union_v1a.pl";
  		    // you need a shell to execute a command pipeline
     		List<String> commands = new ArrayList<String>();
-    		commands.add("/bin/bash");
-    		commands.add("-c");
+    		//commands.add("/bin/bash");
+    		//commands.add("-c");
     		commands.add("cd /");
     		/**commands.add("cp " +currFeatServer+ " features.pl");
     		commands.add("cp " +uploadFeat + " features1.pl");
