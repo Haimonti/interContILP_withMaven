@@ -139,8 +139,6 @@ public class QueryServlet extends HttpServlet
  		 String scriptPath = "/software/yap-6.2.2/";
  		 String script = "union_features_v1.sh";
  		 
- 		 try 
- 		 {
         	//ProcessBuilder unionFeat = new ProcessBuilder("/bin/bash", scriptPath + script);
         	ProcessBuilder unionFeat = new ProcessBuilder();
         	System.out.println("Print the current directory "+unionFeat.directory());
@@ -209,12 +207,7 @@ public class QueryServlet extends HttpServlet
         	pb.waitFor();
         	
         	//Finally write the union file to the bucket
-   		 } 
-   		 catch (Exception e) 
-   		 {
-        	// TODO Auto-generated catch block
-        	e.printStackTrace();
-   		 }
+   		 
  		 out.println("Done! Server now has the union of the uploaded feature file and its local feature file ...."); 
  		 out.println("<br>");
  		 out.println("<br>");
