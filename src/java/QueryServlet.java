@@ -146,7 +146,7 @@ public class QueryServlet extends HttpServlet
         	System.out.println("Print the current directory "+unionFeat.directory());
         	// Set the working directory
         	//unionFeat.directory(new File(System.getProperty("user.dir")+scriptPath));
-        	//unionFeat.directory(new File(System.getProperty("user.home")));
+        	//unionFeat.directory(new File(System.getProperty("user.home"))); <---- /base/data/home
         	unionFeat.directory(new File("/google/google-cloud-sdk"));
         	System.out.println("Did it update the current directory? "+unionFeat.directory());
         	//String currFeatServer =unionFeat.directory()+File.separator+"feature_server.pl";
@@ -156,10 +156,11 @@ public class QueryServlet extends HttpServlet
  		    //String outFile=unionFeat.directory()+File.separator+"feature_union_v1a.pl";
  		    String outFile=bucket+scriptPath+"feature_union_v1a.pl";
  		    // you need a shell to execute a command pipeline
-    		/*List<String> commands = new ArrayList<String>();
+    		List<String> commands = new ArrayList<String>();
     		commands.add("/bin/bash");
     		commands.add("-c");
-    		commands.add("cp " +currFeatServer+ " features.pl");
+    		commands.add("cd /");
+    		/**commands.add("cp " +currFeatServer+ " features.pl");
     		commands.add("cp " +uploadFeat + " features1.pl");
     		commands.add("shift");
  		    commands.add("./yap <<+");
@@ -168,9 +169,9 @@ public class QueryServlet extends HttpServlet
  		    commands.add("+");
  		    commands.add("mv features_union.pl features.pl");
  		    commands.add("shift");
- 		    commands.add("cat features.pl | grep -v " +"features from "+">"+outFile);
- 		    unionFeat=new ProcessBuilder(commands);*/
- 		    unionFeat = new ProcessBuilder("/bin/bash", "cd /");
+ 		    commands.add("cat features.pl | grep -v " +"features from "+">"+outFile); */
+ 		    unionFeat=new ProcessBuilder(commands);
+ 		    //unionFeat = new ProcessBuilder("/bin/bash", "cd /");
  		    //unionFeat=new ProcessBuilder("../../../../../../bin/bash","-c", bucket+scriptPath+script,currFeatServer,uploadFeat,outFile);
         	//unionFeat=new ProcessBuilder("/bin/bash",bucket+scriptPath+script,currFeatServer,uploadFeat,outFile);
         	unionFeat.redirectErrorStream(true);
