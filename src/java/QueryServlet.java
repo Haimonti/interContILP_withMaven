@@ -143,22 +143,22 @@ public class QueryServlet extends HttpServlet
         	ProcessBuilder unionFeat = new ProcessBuilder();
         	System.out.println("Print the current directory "+unionFeat.directory());
         	// Set the working directory
-        	//unionFeat.directory(new File(System.getProperty("user.dir")+scriptPath));
+        	unionFeat.directory(new File(System.getProperty("user.dir")+scriptPath));
         	//unionFeat.directory(new File(System.getProperty("user.home"))); <---- /base/data/home
-        	unionFeat.directory(new File("/google/google-cloud-sdk"));
+        	//unionFeat.directory(new File("/google/google-cloud-sdk"));
         	System.out.println("Did it update the current directory? "+unionFeat.directory());
         	System.out.println("What is the PATH seen by the JAVA process? "+System.getenv("PATH"));
-        	//String currFeatServer =unionFeat.directory()+File.separator+"feature_server.pl";
-        	String currFeatServer=bucket+scriptPath+"feature_server.pl";
+        	String currFeatServer =unionFeat.directory()+File.separator+"feature_server.pl";
+        	//String currFeatServer=bucket+scriptPath+"feature_server.pl";
  		 	//String uploadFeat = "../../uploadFiles/feature_local.pl";
  		 	String uploadFeat=bucket+File.separator+"feature_local.pl";
- 		    //String outFile=unionFeat.directory()+File.separator+"feature_union_v1a.pl";
- 		    String outFile=bucket+scriptPath+"feature_union_v1a.pl";
+ 		    String outFile=unionFeat.directory()+File.separator+"feature_union_v1a.pl";
+ 		    //String outFile=bucket+scriptPath+"feature_union_v1a.pl";
  		    // you need a shell to execute a command pipeline
-    		List<String> commands = new ArrayList<String>();
-    		commands.add("/bin/bash");
-    		commands.add("-c");
-    		commands.add("cd /");
+    		//List<String> commands = new ArrayList<String>();
+    		//commands.add("/bin/bash");
+    		//commands.add("-c");
+    		//commands.add("cd /");
     		/**commands.add("cp " +currFeatServer+ " features.pl");
     		commands.add("cp " +uploadFeat + " features1.pl");
     		commands.add("shift");
@@ -169,10 +169,11 @@ public class QueryServlet extends HttpServlet
  		    commands.add("mv features_union.pl features.pl");
  		    commands.add("shift");
  		    commands.add("cat features.pl | grep -v " +"features from "+">"+outFile); */
- 		    unionFeat=new ProcessBuilder(commands);
+ 		    //unionFeat=new ProcessBuilder(commands);
  		    //unionFeat = new ProcessBuilder("/bin/bash", "cd /");
  		    //unionFeat=new ProcessBuilder("../../../../../../bin/bash","-c", bucket+scriptPath+script,currFeatServer,uploadFeat,outFile);
         	//unionFeat=new ProcessBuilder("/bin/bash",bucket+scriptPath+script,currFeatServer,uploadFeat,outFile);
+        	unionFeat=new ProcessBuilder("/bin/bash",script,currFeatServer,uploadFeat,outFile);
         	unionFeat.redirectErrorStream(true);
         	Process pb = unionFeat.start();
         	System.out.println("Started the union script without /bin/bash");
@@ -187,16 +188,16 @@ public class QueryServlet extends HttpServlet
             subPbInputReader.close();  
             
             // Get the output stream
-            OutputStream outSt = pb.getOutputStream(); 
-            outSt.close();
+            //OutputStream outSt = pb.getOutputStream(); 
+            //outSt.close();
             
             // this reads from the subprocess's error stream
-            BufferedReader subPbErrorReader = 
-                new BufferedReader(new InputStreamReader(pb.getErrorStream()));
-			String lineEr = null;
-            while ((lineEr = subPbErrorReader.readLine()) != null)
-                System.out.println(lineEr);
-            subPbErrorReader.close();  
+            //BufferedReader subPbErrorReader = 
+            //    new BufferedReader(new InputStreamReader(pb.getErrorStream()));
+			//String lineEr = null;
+            //while ((lineEr = subPbErrorReader.readLine()) != null)
+            //    System.out.println(lineEr);
+            //subPbErrorReader.close();  
         
             // close the output stream 
             //System.out.println("Closing the output stream"); 
