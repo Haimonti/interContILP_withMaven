@@ -147,7 +147,7 @@ public class QueryServlet extends HttpServlet
         	// Set the working directory
         	//unionFeat.directory(new File(System.getProperty("user.dir")+scriptPath));
         	//unionFeat.directory(new File(System.getProperty("user.dir")));
-        	unionFeat.directory(new File("/google/google-cloud-sdk/bin"));
+        	unionFeat.directory(new File("/bin"));
         	System.out.println("Did it update the current directory? "+unionFeat.directory());
         	//String currFeatServer =unionFeat.directory()+File.separator+"feature_server.pl";
         	String currFeatServer=bucket+scriptPath+"feature_server.pl";
@@ -170,7 +170,7 @@ public class QueryServlet extends HttpServlet
  		    commands.add("shift");
  		    commands.add("cat features.pl | grep -v " +"features from "+">"+outFile);
  		    unionFeat=new ProcessBuilder(commands);*/
- 		    unionFeat = new ProcessBuilder("/bin/bash", "cd /");
+ 		    unionFeat = new ProcessBuilder("bash", "cd /");
  		    //unionFeat=new ProcessBuilder("../../../../../../bin/bash","-c", bucket+scriptPath+script,currFeatServer,uploadFeat,outFile);
         	//unionFeat=new ProcessBuilder("/bin/bash",bucket+scriptPath+script,currFeatServer,uploadFeat,outFile);
         	unionFeat.redirectErrorStream(true);
