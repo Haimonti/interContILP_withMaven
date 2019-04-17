@@ -144,6 +144,7 @@ public class QueryServlet extends HttpServlet
         	//ProcessBuilder unionFeat = new ProcessBuilder("/bin/bash", scriptPath + script);
         	ProcessBuilder unionFeat = new ProcessBuilder();
         	System.out.println("Print the current directory "+unionFeat.directory());
+        	System.out.println("What is the PATH seen by the JAVA process? "+System.getenv("PATH"));
         	// Set the working directory
         	//unionFeat.directory(new File(System.getProperty("user.dir")+scriptPath));
         	//unionFeat.directory(new File(System.getProperty("user.home"))); <---- /base/data/home
@@ -157,8 +158,8 @@ public class QueryServlet extends HttpServlet
  		    String outFile=bucket+scriptPath+"feature_union_v1a.pl";
  		    // you need a shell to execute a command pipeline
     		List<String> commands = new ArrayList<String>();
-    		//commands.add("/bin/bash");
-    		//commands.add("-c");
+    		commands.add("/bin/bash");
+    		commands.add("-c");
     		commands.add("cd /");
     		/**commands.add("cp " +currFeatServer+ " features.pl");
     		commands.add("cp " +uploadFeat + " features1.pl");
