@@ -146,7 +146,7 @@ public class QueryServlet extends HttpServlet
         	System.out.println("Print the current directory "+unionFeat.directory());
         	// Set the working directory
         	//unionFeat.directory(new File(System.getProperty("user.dir")+scriptPath));
-        	unionFeat.directory(new File(System.getProperty("user.dir"));
+        	unionFeat.directory(new File(System.getProperty("user.dir")));
         	System.out.println("Did it update the current directory? "+unionFeat.directory());
         	//String currFeatServer =unionFeat.directory()+File.separator+"feature_server.pl";
         	String currFeatServer=bucket+scriptPath+"feature_server.pl";
