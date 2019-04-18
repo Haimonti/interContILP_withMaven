@@ -151,7 +151,8 @@ public class QueryServlet extends HttpServlet
         	String currFeatServer =unionFeat.directory()+File.separator+"feature_server.pl";
         	//String currFeatServer=bucket+scriptPath+"feature_server.pl";
  		 	//String uploadFeat = "../../uploadFiles/feature_local.pl";
- 		 	String uploadFeat=savePath+File.separator+"feature_local.pl";
+ 		 	//String uploadFeat=savePath+File.separator+"feature_local.pl"; <-- Works on DevApp Server
+ 		 	String uploadFeat=bucket+File.separator+"feature_local.pl";
  		    String outFile=unionFeat.directory()+File.separator+"feature_union_v1a.pl";
  		    //String outFile=bucket+scriptPath+"feature_union_v1a.pl";
  		    // you need a shell to execute a command pipeline
