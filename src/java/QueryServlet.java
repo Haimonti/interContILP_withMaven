@@ -47,23 +47,17 @@ public class QueryServlet extends HttpServlet
         private static final int BUFFER_SIZE = 2 * 1024 * 1024;
           //Create a cloud storage bucket
 		private final String bucket = "steel-earth-236015.appspot.com";
-   		  
+   		private final String appDeployPath="/home/haimonti/interContILP_withMaven/target/QueryServlet-1";  
   		
    		public void doPost(HttpServletRequest request, HttpServletResponse response)
          throws IOException, ServletException 
      	{ 
-     	  
-     	//GcsFileOptions instance = GcsFileOptions.getDefaultInstance();
-     	//System.out.println("Instance is: "+instance);
-    	//GcsFilename fileName = getFileName(request);
-    	//System.out.println("File name is: "+fileName);
-   	    //GcsOutputChannel outputChannel;
-    	
+     	      	
         // gets absolute path of the web application
         //String appPath = request.getServletContext().getRealPath("");
         ProcessBuilder appPath = new ProcessBuilder("/bin/bash", "echo $HOME");
-        appPath.directory(new File("/google/google-cloud-sdk"));
-        System.out.println("Is this the home directory "+appPath.directory());
+        appPath.directory(new File(appDeployPath)+File.separator+SAVE_DIR);
+        System.out.println("The deployment directory where uploadFiles resides for now: "+appPath.directory());
         // constructs path of the directory to save uploaded file
         //String savePath = appPath + File.separator + SAVE_DIR;
         //String savePath = System.getProperty("user.dir") + File.separator + SAVE_DIR;
@@ -118,7 +112,7 @@ public class QueryServlet extends HttpServlet
 		 // Write the file
 		 //outputChannel = gcsService.createOrReplace(fileName, instance);
     	 //copy(request.getInputStream(), Channels.newOutputStream(outputChannel));
-		 /**fileName=savePath + File.separator + fileName;		 
+		 fileName=appPath.directory() + File.separator + fileName;		 
 		 File fNew = new File(fileName);
 		 outputContent = new FileOutputStream(fNew);
 		 if (!fNew.exists()) 
@@ -132,7 +126,7 @@ public class QueryServlet extends HttpServlet
 		 }
 		 outputContent.flush();
 		 outputContent.close();
-		 fileContent.close(); **/
+		 fileContent.close(); 
  		 out.println("The uploaded file has been written on the server ....");  
  		 out.println("<br>");
  		 out.println("<br>");
@@ -145,19 +139,19 @@ public class QueryServlet extends HttpServlet
  		 
         	//ProcessBuilder unionFeat = new ProcessBuilder("/bin/bash", scriptPath + script);
         	ProcessBuilder unionFeat = new ProcessBuilder();
-        	System.out.println("Print the current directory "+unionFeat.directory());
+        	//System.out.println("Print the current directory "+unionFeat.directory());
         	// Set the working directory
-        	unionFeat.directory(new File(System.getProperty("user.dir")+scriptPath));
+        	unionFeat.directory(new File(appDeployPath)+scriptPath));
         	//unionFeat.directory(new File(System.getProperty("user.home"))); <---- /base/data/home
         	//unionFeat.directory(new File("/google/google-cloud-sdk"));
-        	System.out.println("Did it update the current directory? "+unionFeat.directory());
+        	System.out.println("Current directory of unionFeat is: "+unionFeat.directory());
         	System.out.println("What is the PATH seen by the JAVA process? "+System.getenv("PATH"));
-        	String currFeatServer =unionFeat.directory()+File.separator+"feature_server.pl";
+        	String currFeatServer =unionFeat.directory()+"feature_server.pl";
         	//String currFeatServer=bucket+scriptPath+"feature_server.pl";
  		 	//String uploadFeat = "../../uploadFiles/feature_local.pl";
  		 	//String uploadFeat=savePath+File.separator+"feature_local.pl"; //<-- Works on DevApp Server
- 		 	String uploadFeat=System.getProperty("user.dir")+File.separator+"feature_local.pl";
- 		    String outFile=unionFeat.directory()+File.separator+"feature_union_v1a.pl";
+ 		 	String uploadFeat=appDeployPath+File.separator+SAVE_DIR+File.separator+"feature_local.pl";
+ 		    String outFile=unionFeat.directory()+"feature_union_v1a.pl";
  		    //String outFile=bucket+scriptPath+"feature_union_v1a.pl";
  		    // you need a shell to execute a command pipeline
     		//List<String> commands = new ArrayList<String>();
@@ -178,7 +172,7 @@ public class QueryServlet extends HttpServlet
  		    //unionFeat = new ProcessBuilder("/bin/bash", "cd /");
  		    //unionFeat=new ProcessBuilder("../../../../../../bin/bash","-c", bucket+scriptPath+script,currFeatServer,uploadFeat,outFile);
         	//unionFeat=new ProcessBuilder("/bin/bash",bucket+scriptPath+script,currFeatServer,uploadFeat,outFile);
-        	unionFeat=new ProcessBuilder("/bin/bash",unionFeat.directory()+File.separator+script,currFeatServer,uploadFeat,outFile);
+        	unionFeat=new ProcessBuilder("/bin/bash",unionFeat.directory()+script,currFeatServer,uploadFeat,outFile);
         	unionFeat.redirectErrorStream(true);
         	Process pb = unionFeat.start();
         	System.out.println("Started the union script....");
