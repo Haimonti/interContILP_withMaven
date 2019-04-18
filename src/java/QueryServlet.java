@@ -70,13 +70,13 @@ public class QueryServlet extends HttpServlet
         //String savePath=File.separator+SAVE_DIR;
         // Allocate a output writer to write the response message into the network socket
       	PrintWriter out = response.getWriter();
-        File fileSaveDir = new File(savePath);
+        /**File fileSaveDir = new File(savePath);
         if (!fileSaveDir.exists()) 
         {
             fileSaveDir.mkdir();
             System.out.println("Created new directory?");
         }
-        System.out.println("Path where file is to be stored: "+savePath); 
+        System.out.println("Path where file is to be stored: "+savePath); **/
  		//Get the file(s)
  		try 
  		{ 
@@ -155,8 +155,8 @@ public class QueryServlet extends HttpServlet
         	String currFeatServer =unionFeat.directory()+File.separator+"feature_server.pl";
         	//String currFeatServer=bucket+scriptPath+"feature_server.pl";
  		 	//String uploadFeat = "../../uploadFiles/feature_local.pl";
- 		 	String uploadFeat=savePath+File.separator+"feature_local.pl"; //<-- Works on DevApp Server
- 		 	//String uploadFeat=System.getProperty("user.dir")+File.separator+"feature_local.pl";
+ 		 	//String uploadFeat=savePath+File.separator+"feature_local.pl"; //<-- Works on DevApp Server
+ 		 	String uploadFeat=System.getProperty("user.dir")+File.separator+"feature_local.pl";
  		    String outFile=unionFeat.directory()+File.separator+"feature_union_v1a.pl";
  		    //String outFile=bucket+scriptPath+"feature_union_v1a.pl";
  		    // you need a shell to execute a command pipeline
