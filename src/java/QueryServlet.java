@@ -60,19 +60,19 @@ public class QueryServlet extends HttpServlet
    	    //GcsOutputChannel outputChannel;
     	
         // gets absolute path of the web application
-        //String appPath = request.getServletContext().getRealPath("");
+        String appPath = request.getServletContext().getRealPath("");
         // constructs path of the directory to save uploaded file
         //String savePath = appPath + File.separator + SAVE_DIR;
-        //String savePath=File.separator+SAVE_DIR;
+        String savePath=File.separator+SAVE_DIR;
         // Allocate a output writer to write the response message into the network socket
       	PrintWriter out = response.getWriter();
-        /**File fileSaveDir = new File(savePath);
+        File fileSaveDir = new File(savePath);
         if (!fileSaveDir.exists()) 
         {
             fileSaveDir.mkdir();
             System.out.println("Created new directory?");
         }
-        System.out.println("Path where file is to be stored: "+savePath); **/
+        System.out.println("Path where file is to be stored: "+savePath); 
  		//Get the file(s)
  		try 
  		{ 
@@ -114,8 +114,8 @@ public class QueryServlet extends HttpServlet
 		 // Write the file
 		 //outputChannel = gcsService.createOrReplace(fileName, instance);
     	 //copy(request.getInputStream(), Channels.newOutputStream(outputChannel));
-		 //fileName=savePath + File.separator + fileName;		 
-		 /**File fNew = new File(fileName);
+		 fileName=savePath + File.separator + fileName;		 
+		 File fNew = new File(fileName);
 		 outputContent = new FileOutputStream(fNew);
 		 if (!fNew.exists()) 
 		 {
@@ -128,7 +128,7 @@ public class QueryServlet extends HttpServlet
 		 }
 		 outputContent.flush();
 		 outputContent.close();
-		 fileContent.close(); **/
+		 fileContent.close(); 
  		 out.println("The uploaded file has been written on the server ....");  
  		 out.println("<br>");
  		 out.println("<br>");
@@ -150,8 +150,8 @@ public class QueryServlet extends HttpServlet
         	System.out.println("What is the PATH seen by the JAVA process? "+System.getenv("PATH"));
         	String currFeatServer =unionFeat.directory()+File.separator+"feature_server.pl";
         	//String currFeatServer=bucket+scriptPath+"feature_server.pl";
- 		 	//String uploadFeat = "../../uploadFiles/feature_local.pl";
- 		 	String uploadFeat=bucket+File.separator+"feature_local.pl";
+ 		 	String uploadFeat = "../../uploadFiles/feature_local.pl";
+ 		 	//String uploadFeat=bucket+File.separator+"feature_local.pl";
  		    String outFile=unionFeat.directory()+File.separator+"feature_union_v1a.pl";
  		    //String outFile=bucket+scriptPath+"feature_union_v1a.pl";
  		    // you need a shell to execute a command pipeline
