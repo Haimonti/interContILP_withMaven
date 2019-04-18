@@ -61,9 +61,12 @@ public class QueryServlet extends HttpServlet
     	
         // gets absolute path of the web application
         //String appPath = request.getServletContext().getRealPath("");
+        ProcessBuilder appPath = new ProcessBuilder("/bin/bash", "echo $HOME");
+        appPath.directory(new File("/google/google-cloud-sdk"));
+        System.out.println("Is this the home directory "+appPath.directory());
         // constructs path of the directory to save uploaded file
         //String savePath = appPath + File.separator + SAVE_DIR;
-        String savePath = System.getProperty("user.dir") + File.separator + SAVE_DIR;
+        //String savePath = System.getProperty("user.dir") + File.separator + SAVE_DIR;
         //String savePath=File.separator+SAVE_DIR;
         // Allocate a output writer to write the response message into the network socket
       	PrintWriter out = response.getWriter();
@@ -115,7 +118,7 @@ public class QueryServlet extends HttpServlet
 		 // Write the file
 		 //outputChannel = gcsService.createOrReplace(fileName, instance);
     	 //copy(request.getInputStream(), Channels.newOutputStream(outputChannel));
-		 fileName=savePath + File.separator + fileName;		 
+		 /**fileName=savePath + File.separator + fileName;		 
 		 File fNew = new File(fileName);
 		 outputContent = new FileOutputStream(fNew);
 		 if (!fNew.exists()) 
@@ -129,7 +132,7 @@ public class QueryServlet extends HttpServlet
 		 }
 		 outputContent.flush();
 		 outputContent.close();
-		 fileContent.close(); 
+		 fileContent.close(); **/
  		 out.println("The uploaded file has been written on the server ....");  
  		 out.println("<br>");
  		 out.println("<br>");
