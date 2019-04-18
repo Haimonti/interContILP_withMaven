@@ -141,7 +141,7 @@ public class QueryServlet extends HttpServlet
         	ProcessBuilder unionFeat = new ProcessBuilder();
         	//System.out.println("Print the current directory "+unionFeat.directory());
         	// Set the working directory
-        	unionFeat.directory(new File(appDeployPath)+scriptPath));
+        	unionFeat.directory(new File(appDeployPath)+scriptPath);
         	//unionFeat.directory(new File(System.getProperty("user.home"))); <---- /base/data/home
         	//unionFeat.directory(new File("/google/google-cloud-sdk"));
         	System.out.println("Current directory of unionFeat is: "+unionFeat.directory());
