@@ -31,7 +31,7 @@ public class QueryServlet extends HttpServlet
      	 * the web application directory.
      	 */
     	private static final String SAVE_DIR = "uploadFiles";
-    	public File file;
+    	//public File file;
     	int DEFAULT_BUFFER_SIZE = 2048;
     	//public String filePath;
     	int isRead=0;
@@ -60,7 +60,7 @@ public class QueryServlet extends HttpServlet
    	    //GcsOutputChannel outputChannel;
     	
         // gets absolute path of the web application
-        String appPath = request.getServletContext().getRealPath("");
+        //String appPath = request.getServletContext().getRealPath("");
         // constructs path of the directory to save uploaded file
         //String savePath = appPath + File.separator + SAVE_DIR;
         String savePath=File.separator+SAVE_DIR;
@@ -104,7 +104,7 @@ public class QueryServlet extends HttpServlet
          out.println("<br>");
          out.println("<br>");
          System.out.println("File name is: "+fileName);
-		 //fileContent = filePart.getInputStream();
+		 fileContent = filePart.getInputStream();
 		 
 		 //BlobInfo blobInfo =storage.create(BlobInfo.newBuilder(bucketName, fileName)
               // Modify access list to allow all users with link to read file
@@ -173,7 +173,7 @@ public class QueryServlet extends HttpServlet
  		    //unionFeat = new ProcessBuilder("/bin/bash", "cd /");
  		    //unionFeat=new ProcessBuilder("../../../../../../bin/bash","-c", bucket+scriptPath+script,currFeatServer,uploadFeat,outFile);
         	//unionFeat=new ProcessBuilder("/bin/bash",bucket+scriptPath+script,currFeatServer,uploadFeat,outFile);
-        	unionFeat=new ProcessBuilder("/bin/bash",unionFeat.directory()+File.separator+script,currFeatServer,uploadFeat,outFile);
+        	//unionFeat=new ProcessBuilder("/bin/bash",unionFeat.directory()+File.separator+script,currFeatServer,uploadFeat,outFile);
         	unionFeat.redirectErrorStream(true);
         	Process pb = unionFeat.start();
         	System.out.println("Started the union script without /bin/bash");
