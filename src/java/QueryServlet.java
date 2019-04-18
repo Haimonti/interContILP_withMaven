@@ -54,23 +54,23 @@ public class QueryServlet extends HttpServlet
      	{ 
      	      	
         // gets absolute path of the web application
-        //String appPath = request.getServletContext().getRealPath("");
-        ProcessBuilder appPath = new ProcessBuilder("/bin/bash", "echo $HOME");
-        appPath.directory(new File("/home/haimonti/interContILP_withMaven/target/QueryServlet-1"));
-        System.out.println("The deployment directory where uploadFiles resides for now: "+appPath.directory());
+        String appPath = request.getServletContext().getRealPath("");
+        //ProcessBuilder appPath = new ProcessBuilder("/bin/bash", "echo $HOME");
+        //appPath.directory(new File("/home/haimonti/interContILP_withMaven/target/QueryServlet-1"));
+        System.out.println("The appPath where uploadFiles resides for now: "+appPath);
         // constructs path of the directory to save uploaded file
-        //String savePath = appPath + File.separator + SAVE_DIR;
+        String savePath = appPath + File.separator + SAVE_DIR;
         //String savePath = System.getProperty("user.dir") + File.separator + SAVE_DIR;
         //String savePath=File.separator+SAVE_DIR;
         // Allocate a output writer to write the response message into the network socket
       	PrintWriter out = response.getWriter();
-        /**File fileSaveDir = new File(savePath);
+        File fileSaveDir = new File(savePath);
         if (!fileSaveDir.exists()) 
         {
             fileSaveDir.mkdir();
             System.out.println("Created new directory?");
         }
-        System.out.println("Path where file is to be stored: "+savePath); **/
+        System.out.println("Path where file is to be stored: "+savePath); 
  		//Get the file(s)
  		try 
  		{ 
@@ -112,7 +112,7 @@ public class QueryServlet extends HttpServlet
 		 // Write the file
 		 //outputChannel = gcsService.createOrReplace(fileName, instance);
     	 //copy(request.getInputStream(), Channels.newOutputStream(outputChannel));
-		 fileName=appPath.directory()+File.separator+SAVE_DIR+File.separator + fileName;		 
+		 fileName=savePath+File.separator + fileName;		 
 		 File fNew = new File(fileName);
 		 outputContent = new FileOutputStream(fNew);
 		 if (!fNew.exists()) 
@@ -141,16 +141,16 @@ public class QueryServlet extends HttpServlet
         	ProcessBuilder unionFeat = new ProcessBuilder();
         	//System.out.println("Print the current directory "+unionFeat.directory());
         	// Set the working directory
-        	unionFeat.directory(new File("/home/haimonti/interContILP_withMaven/target/QueryServlet-1"));
-        	//unionFeat.directory(new File(System.getProperty("user.home"))); <---- /base/data/home
+        	//unionFeat.directory(new File("/home/haimonti/interContILP_withMaven/target/QueryServlet-1"));
+        	unionFeat.directory(new File(System.getProperty("user.dir"))); //<---- /base/data/home
         	//unionFeat.directory(new File("/google/google-cloud-sdk"));
         	System.out.println("Current directory of unionFeat is: "+unionFeat.directory());
         	System.out.println("What is the PATH seen by the JAVA process? "+System.getenv("PATH"));
         	String currFeatServer =unionFeat.directory()+scriptPath+"feature_server.pl";
         	//String currFeatServer=bucket+scriptPath+"feature_server.pl";
  		 	//String uploadFeat = "../../uploadFiles/feature_local.pl";
- 		 	//String uploadFeat=savePath+File.separator+"feature_local.pl"; //<-- Works on DevApp Server
- 		 	String uploadFeat=appDeployPath+File.separator+SAVE_DIR+File.separator+"feature_local.pl";
+ 		 	String uploadFeat=savePath+File.separator+"feature_local.pl"; //<-- Works on DevApp Server
+ 		 	//String uploadFeat=bucket+File.separator+"feature_local.pl";
  		    String outFile=unionFeat.directory()+scriptPath+"feature_union_v1a.pl";
  		    //String outFile=bucket+scriptPath+"feature_union_v1a.pl";
  		    // you need a shell to execute a command pipeline
