@@ -60,9 +60,10 @@ public class QueryServlet extends HttpServlet
    	    //GcsOutputChannel outputChannel;
     	
         // gets absolute path of the web application
-        String appPath = request.getServletContext().getRealPath("");
+        //String appPath = request.getServletContext().getRealPath("");
         // constructs path of the directory to save uploaded file
-        String savePath = appPath + File.separator + SAVE_DIR;
+        //String savePath = appPath + File.separator + SAVE_DIR;
+        String savePath = System.getProperty("user.dir") + File.separator + SAVE_DIR;
         //String savePath=File.separator+SAVE_DIR;
         // Allocate a output writer to write the response message into the network socket
       	PrintWriter out = response.getWriter();
@@ -151,8 +152,8 @@ public class QueryServlet extends HttpServlet
         	String currFeatServer =unionFeat.directory()+File.separator+"feature_server.pl";
         	//String currFeatServer=bucket+scriptPath+"feature_server.pl";
  		 	//String uploadFeat = "../../uploadFiles/feature_local.pl";
- 		 	//String uploadFeat=savePath+File.separator+"feature_local.pl"; <-- Works on DevApp Server
- 		 	String uploadFeat=bucket+File.separator+"feature_local.pl";
+ 		 	String uploadFeat=savePath+File.separator+"feature_local.pl"; //<-- Works on DevApp Server
+ 		 	//String uploadFeat=System.getProperty("user.dir")+File.separator+"feature_local.pl";
  		    String outFile=unionFeat.directory()+File.separator+"feature_union_v1a.pl";
  		    //String outFile=bucket+scriptPath+"feature_union_v1a.pl";
  		    // you need a shell to execute a command pipeline
