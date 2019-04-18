@@ -61,6 +61,9 @@ public class QueryServlet extends HttpServlet
     	
         // gets absolute path of the web application
         //String appPath = request.getServletContext().getRealPath("");
+        ProcessBuilder appPath = new ProcessBuilder("/bin/bash", "echo $HOME");
+        appPath.directory(new File("/google/google-cloud-sdk"));
+        System.out.println("Is this the home directory "+appPath.directory());
         // constructs path of the directory to save uploaded file
         //String savePath = appPath + File.separator + SAVE_DIR;
         //String savePath = System.getProperty("user.dir") + File.separator + SAVE_DIR;
