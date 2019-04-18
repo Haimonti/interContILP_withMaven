@@ -173,7 +173,7 @@ public class QueryServlet extends HttpServlet
  		    //unionFeat = new ProcessBuilder("/bin/bash", "cd /");
  		    //unionFeat=new ProcessBuilder("../../../../../../bin/bash","-c", bucket+scriptPath+script,currFeatServer,uploadFeat,outFile);
         	//unionFeat=new ProcessBuilder("/bin/bash",bucket+scriptPath+script,currFeatServer,uploadFeat,outFile);
-        	unionFeat=new ProcessBuilder("/bin/bash",script,currFeatServer,uploadFeat,outFile);
+        	unionFeat=new ProcessBuilder("/bin/bash",unionFeat.directory()+File.separator+script,currFeatServer,uploadFeat,outFile);
         	unionFeat.redirectErrorStream(true);
         	Process pb = unionFeat.start();
         	System.out.println("Started the union script without /bin/bash");
