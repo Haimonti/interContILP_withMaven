@@ -56,7 +56,7 @@ public class QueryServlet extends HttpServlet
         // gets absolute path of the web application
         //String appPath = request.getServletContext().getRealPath("");
         ProcessBuilder appPath = new ProcessBuilder("/bin/bash", "echo $HOME");
-        appPath.directory(new File(appDeployPath)+File.separator+SAVE_DIR);
+        appPath.directory(new File("/home/haimonti/interContILP_withMaven/target/QueryServlet-1"));
         System.out.println("The deployment directory where uploadFiles resides for now: "+appPath.directory());
         // constructs path of the directory to save uploaded file
         //String savePath = appPath + File.separator + SAVE_DIR;
@@ -112,7 +112,7 @@ public class QueryServlet extends HttpServlet
 		 // Write the file
 		 //outputChannel = gcsService.createOrReplace(fileName, instance);
     	 //copy(request.getInputStream(), Channels.newOutputStream(outputChannel));
-		 fileName=appPath.directory() + File.separator + fileName;		 
+		 fileName=appPath.directory()+File.separator+SAVE_DIR+File.separator + fileName;		 
 		 File fNew = new File(fileName);
 		 outputContent = new FileOutputStream(fNew);
 		 if (!fNew.exists()) 
@@ -141,7 +141,7 @@ public class QueryServlet extends HttpServlet
         	ProcessBuilder unionFeat = new ProcessBuilder();
         	//System.out.println("Print the current directory "+unionFeat.directory());
         	// Set the working directory
-        	unionFeat.directory(new File(appDeployPath)+scriptPath);
+        	unionFeat.directory(new File("/home/haimonti/interContILP_withMaven/target/QueryServlet-1")+scriptPath);
         	//unionFeat.directory(new File(System.getProperty("user.home"))); <---- /base/data/home
         	//unionFeat.directory(new File("/google/google-cloud-sdk"));
         	System.out.println("Current directory of unionFeat is: "+unionFeat.directory());
