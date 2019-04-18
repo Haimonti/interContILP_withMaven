@@ -141,17 +141,17 @@ public class QueryServlet extends HttpServlet
         	ProcessBuilder unionFeat = new ProcessBuilder();
         	//System.out.println("Print the current directory "+unionFeat.directory());
         	// Set the working directory
-        	unionFeat.directory(new File("/home/haimonti/interContILP_withMaven/target/QueryServlet-1")+scriptPath);
+        	unionFeat.directory(new File("/home/haimonti/interContILP_withMaven/target/QueryServlet-1"));
         	//unionFeat.directory(new File(System.getProperty("user.home"))); <---- /base/data/home
         	//unionFeat.directory(new File("/google/google-cloud-sdk"));
         	System.out.println("Current directory of unionFeat is: "+unionFeat.directory());
         	System.out.println("What is the PATH seen by the JAVA process? "+System.getenv("PATH"));
-        	String currFeatServer =unionFeat.directory()+"feature_server.pl";
+        	String currFeatServer =unionFeat.directory()+scriptPath+"feature_server.pl";
         	//String currFeatServer=bucket+scriptPath+"feature_server.pl";
  		 	//String uploadFeat = "../../uploadFiles/feature_local.pl";
  		 	//String uploadFeat=savePath+File.separator+"feature_local.pl"; //<-- Works on DevApp Server
  		 	String uploadFeat=appDeployPath+File.separator+SAVE_DIR+File.separator+"feature_local.pl";
- 		    String outFile=unionFeat.directory()+"feature_union_v1a.pl";
+ 		    String outFile=unionFeat.directory()+scriptPath+"feature_union_v1a.pl";
  		    //String outFile=bucket+scriptPath+"feature_union_v1a.pl";
  		    // you need a shell to execute a command pipeline
     		//List<String> commands = new ArrayList<String>();
@@ -172,7 +172,7 @@ public class QueryServlet extends HttpServlet
  		    //unionFeat = new ProcessBuilder("/bin/bash", "cd /");
  		    //unionFeat=new ProcessBuilder("../../../../../../bin/bash","-c", bucket+scriptPath+script,currFeatServer,uploadFeat,outFile);
         	//unionFeat=new ProcessBuilder("/bin/bash",bucket+scriptPath+script,currFeatServer,uploadFeat,outFile);
-        	unionFeat=new ProcessBuilder("/bin/bash",unionFeat.directory()+script,currFeatServer,uploadFeat,outFile);
+        	unionFeat=new ProcessBuilder("/bin/bash",unionFeat.directory()+scriptPath+script,currFeatServer,uploadFeat,outFile);
         	unionFeat.redirectErrorStream(true);
         	Process pb = unionFeat.start();
         	System.out.println("Started the union script....");
