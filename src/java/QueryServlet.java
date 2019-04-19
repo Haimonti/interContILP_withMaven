@@ -263,8 +263,8 @@ public class QueryServlet extends HttpServlet
 			return fName;
     		}
   		}
-  		return null; **/
-	}
+  		return null; 
+	}**/
 	
 	/**private GcsFilename getFileName(HttpServletRequest req) 
 	{
