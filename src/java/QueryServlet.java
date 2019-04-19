@@ -1,14 +1,20 @@
 // To save as "<TOMCAT_HOME>\webapps\hello\WEB-INF\classes\QueryServlet.java".
 
 //[START gcs_imports]
-import com.google.appengine.tools.cloudstorage.GcsFileOptions;
+/**import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
 import com.google.appengine.tools.cloudstorage.GcsInputChannel;
 import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
 import com.google.appengine.tools.cloudstorage.GcsService;
 import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
-import com.google.appengine.tools.cloudstorage.RetryParams;
+import com.google.appengine.tools.cloudstorage.RetryParams;**/
 //[END gcs_imports]
+
+import com.google.cloud.storage.Acl;
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
 
 import java.io.*;
 import java.util.*;
@@ -38,17 +44,24 @@ public class QueryServlet extends HttpServlet
     	InputStream fileContent=null;
     	OutputStream outputContent=null;
     	// Create a GCS Service with back-off parameters
-     	private final GcsService gcsService = GcsServiceFactory.createGcsService(new RetryParams.Builder()
+     	/**private final GcsService gcsService = GcsServiceFactory.createGcsService(new RetryParams.Builder()
   			.initialRetryDelayMillis(10)
             .retryMaxAttempts(10)
             .totalRetryPeriodMillis(15000)
-            .build());
+            .build());*/
           //Create buffer size    
         private static final int BUFFER_SIZE = 2 * 1024 * 1024;
           //Create a cloud storage bucket
-		private final String bucket = "steel-earth-236015.appspot.com";
-   		private final String appDeployPath="/home/haimonti/interContILP_withMaven/target/QueryServlet-1";  
+		//private final String bucket = "steel-earth-236015.appspot.com";
+		private final String bucket=System.getenv("BUCKET_NAME");
+		private static Storage storage = null;
+   		//private final String appDeployPath="/home/haimonti/interContILP_withMaven/target/QueryServlet-1";  
   		
+  		public void init() 
+  		{
+    		storage = StorageOptions.getDefaultInstance().getService();
+ 	    }
+ 	    
    		public void doPost(HttpServletRequest request, HttpServletResponse response)
          throws IOException, ServletException 
      	{ 
@@ -81,7 +94,13 @@ public class QueryServlet extends HttpServlet
 		 // Extract filename
 		 //String fileName = uploadedFilename(filePart); 
 		 System.out.println("FileName is: "+fileName);
-  		 GcsFileOptions.Builder builder = new GcsFileOptions.Builder();
+		 //Modify access list to allow all users with link to read file
+   		 List<Acl> acls = new ArrayList<>();
+    	 acls.add(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER));
+   		 // the inputstream is closed by default, so we don't need to close it here
+    	 Blob blob =
+         storage.create(BlobInfo.newBuilder(BUCKET_NAME, fileName).setAcl(acls).build(),filePart.getInputStream());
+  		 /**GcsFileOptions.Builder builder = new GcsFileOptions.Builder();
   		 // Set the file to be publicly viewable
 		 builder.acl("public-read"); 
  		 GcsFileOptions instance = GcsFileOptions.getDefaultInstance();
@@ -90,8 +109,9 @@ public class QueryServlet extends HttpServlet
   		 GcsFilename gcsFile = new GcsFilename(bucket, fileName);
   		 System.out.println("Bucket is: "+bucket);
   		 outputChannel = gcsService.createOrReplace(gcsFile, instance);
-  		 copy(filePart.getInputStream(), Channels.newOutputStream(outputChannel));
+  		 copy(filePart.getInputStream(), Channels.newOutputStream(outputChannel)); **/
   		 System.out.println("Writing file to cloud storage .....");
+  		 response.getWriter().print(blob.getMediaLink());
 		 //return filename; // Return the filename without GCS/bucket appendage
 		 out.println("<html>");
          out.println("<head>");
@@ -227,7 +247,7 @@ public class QueryServlet extends HttpServlet
         }
       } // end of doPost method
       
-	public String uploadedFilename(Part part) 
+	/**public String uploadedFilename(Part part) 
 	{
 		final String partHeader = part.getHeader("content-disposition");
 		for (String content : part.getHeader("content-disposition").split(";")) 
@@ -243,7 +263,7 @@ public class QueryServlet extends HttpServlet
 			return fName;
     		}
   		}
-  		return null;
+  		return null; **/
 	}
 	
 	/**private GcsFilename getFileName(HttpServletRequest req) 
@@ -260,7 +280,7 @@ public class QueryServlet extends HttpServlet
   /**
    * Transfer the data from the inputStream to the outputStream. Then close both streams.
    */
-  private void copy(InputStream input, OutputStream output) throws IOException 
+  /**private void copy(InputStream input, OutputStream output) throws IOException 
   {
     try 
     {
@@ -277,6 +297,6 @@ public class QueryServlet extends HttpServlet
       input.close();
       output.close();
     }
-   } // End of copy method 
+   } // End of copy method **/
 
 }// end of QueryServlet class
