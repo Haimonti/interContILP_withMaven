@@ -53,7 +53,7 @@ public class QueryServlet extends HttpServlet
         private static final int BUFFER_SIZE = 2 * 1024 * 1024;
           //Create a cloud storage bucket
 		//private final String bucket = "steel-earth-236015.appspot.com";
-		private final String bucket=System.getenv("BUCKET_NAME");
+		private static final String bucket=System.getenv("BUCKET_NAME");
 		private static Storage storage = null;
    		//private final String appDeployPath="/home/haimonti/interContILP_withMaven/target/QueryServlet-1";  
   		
