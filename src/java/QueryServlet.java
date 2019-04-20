@@ -67,8 +67,8 @@ public class QueryServlet extends HttpServlet
      	{ 
      	      	
         // gets absolute path of the web application
-        //String appPath = request.getServletContext().getRealPath("");
-        String appPath=System.getenv("PATH"))
+        String appPath = request.getServletContext().getRealPath("");
+        //String appPath=System.getenv("PATH"))
         //ProcessBuilder appPath = new ProcessBuilder("/bin/bash", "echo $HOME");
         //appPath.directory(new File("/home/haimonti/interContILP_withMaven/target/QueryServlet-1"));
         System.out.println("The appPath where uploadFiles resides for now: "+appPath);
