@@ -52,8 +52,8 @@ public class QueryServlet extends HttpServlet
           //Create buffer size    
         private static final int BUFFER_SIZE = 2 * 1024 * 1024;
           //Create a cloud storage bucket
-		private final String bucket = "steel-earth-236015.appspot.com";
-		//private static final String bucket=System.getenv("BUCKET_NAME");
+		//private final String bucket = "steel-earth-236015.appspot.com";
+		private static final String bucket=System.getenv("BUCKET_NAME");
 		private static Storage storage = null;
    		//private final String appDeployPath="/home/haimonti/interContILP_withMaven/target/QueryServlet-1";  
   		
@@ -67,7 +67,8 @@ public class QueryServlet extends HttpServlet
      	{ 
      	      	
         // gets absolute path of the web application
-        String appPath = request.getServletContext().getRealPath("");
+        //String appPath = request.getServletContext().getRealPath("");
+        String appPath=System.getenv("PATH"))
         //ProcessBuilder appPath = new ProcessBuilder("/bin/bash", "echo $HOME");
         //appPath.directory(new File("/home/haimonti/interContILP_withMaven/target/QueryServlet-1"));
         System.out.println("The appPath where uploadFiles resides for now: "+appPath);
@@ -99,7 +100,7 @@ public class QueryServlet extends HttpServlet
     	 acls.add(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER));
    		 // the inputstream is closed by default, so we don't need to close it here
     	 Blob blob =
-         storage.create(BlobInfo.newBuilder(bucket, fileName).setAcl(acls).build(),filePart.getInputStream());
+         storage.create(BlobInfo.newBuilder(BUCKET_NAME, fileName).setAcl(acls).build(),filePart.getInputStream());
   		 /**GcsFileOptions.Builder builder = new GcsFileOptions.Builder();
   		 // Set the file to be publicly viewable
 		 builder.acl("public-read"); 
