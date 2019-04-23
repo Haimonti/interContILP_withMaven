@@ -245,7 +245,7 @@ public class QueryServlet extends HttpServlet
          }
          finally 
       	{
-      	 out.close();  // Always close the output writer
+      	 outPage.close();  // Always close the output writer
         }
       } // end of doPost method
       
