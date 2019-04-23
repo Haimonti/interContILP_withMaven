@@ -77,7 +77,7 @@ public class QueryServlet extends HttpServlet
         //String savePath = System.getProperty("user.dir") + File.separator + SAVE_DIR;
         //String savePath=File.separator+SAVE_DIR;
         // Allocate a output writer to write the response message into the network socket
-      	PrintWriter out = response.getWriter();
+      	PrintWriter outPage = response.getWriter();
         File fileSaveDir = new File(savePath);
         if (!fileSaveDir.exists()) 
         {
@@ -114,14 +114,14 @@ public class QueryServlet extends HttpServlet
   		 System.out.println("Writing file to cloud storage .....");
   		 response.getWriter().print(blob.getMediaLink());
 		 //return filename; // Return the filename without GCS/bucket appendage
-		 out.println("<html>");
-         out.println("<head>");
-         out.println("<title>Query Servlet</title>");  
-         out.println("</head>");
-         out.println("<body>");
-         out.println("Uploaded Filename: " + fileName + "<br>");
-         out.println("<br>");
-         out.println("<br>");
+		 outPage.println("<html>");
+         outPage.println("<head>");
+         outPage.println("<title>Query Servlet</title>");  
+         outPage.println("</head>");
+         outPage.println("<body>");
+         outPage.println("Uploaded Filename: " + fileName + "<br>");
+         outPage.println("<br>");
+         outPage.println("<br>");
          System.out.println("File name is: "+fileName);
 		 fileContent = filePart.getInputStream();
 		 
@@ -148,12 +148,12 @@ public class QueryServlet extends HttpServlet
 		 outputContent.flush();
 		 outputContent.close();
 		 fileContent.close(); 
- 		 out.println("The uploaded file has been written on the server ....");  
- 		 out.println("<br>");
- 		 out.println("<br>");
- 		 out.println("Calling the union script on the server ...."); 
- 		 out.println("<br>");
- 		 out.println("<br>");
+ 		 outPage.println("The uploaded file has been written on the server ....");  
+ 		 outPage.println("<br>");
+ 		 outPage.println("<br>");
+ 		 outPage.println("Calling the union script on the server ...."); 
+ 		 outPage.println("<br>");
+ 		 outPage.println("<br>");
  		 
  		 String scriptPath = "/software/yap-6.2.2/";
  		 String script = "union_features_v1.sh";
@@ -163,6 +163,7 @@ public class QueryServlet extends HttpServlet
         	//System.out.println("Print the current directory "+unionFeat.directory());
         	// Set the working directory
         	//unionFeat.directory(new File("/home/haimonti/interContILP_withMaven/target/QueryServlet-1"));
+        	// dirUnionFeat <-- /var/lib/jetty/webapps/root
         	unionFeat.directory(new File(System.getProperty("user.dir"))); //<---- /base/data/home
         	//unionFeat.directory(new File("/google/google-cloud-sdk"));
         	System.out.println("Current directory of unionFeat is: "+unionFeat.directory());
