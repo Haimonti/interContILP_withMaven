@@ -230,14 +230,14 @@ public class QueryServlet extends HttpServlet
         	
         	//Finally write the union file to the bucket
    		 
- 		 out.println("Done! Server now has the union of the uploaded feature file and its local feature file ...."); 
- 		 out.println("<br>");
- 		 out.println("<br>");
- 		 out.println("Build a local model on the server ....");
- 		 out.println("<br>");
- 		 out.println("<br>");
-         out.println("</body>");
-         out.println("</html>");
+ 		 outPage.println("Done! Server now has the union of the uploaded feature file and its local feature file ...."); 
+ 		 outPage.println("<br>");
+ 		 outPage.println("<br>");
+ 		 outPage.println("Build a local model on the server ....");
+ 		 outPage.println("<br>");
+ 		 outPage.println("<br>");
+         outPage.println("</body>");
+         outPage.println("</html>");
          } 
          catch(Exception ex) 
          {
