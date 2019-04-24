@@ -101,6 +101,7 @@ public class QueryServlet extends HttpServlet
    		 // the inputstream is closed by default, so we don't need to close it here
     	 Blob blob =
          storage.create(BlobInfo.newBuilder(bucket, fileName).setAcl(acls).build(),filePart.getInputStream());
+         //response.getWriter().print(blob.getMediaLink());
   		 /**GcsFileOptions.Builder builder = new GcsFileOptions.Builder();
   		 // Set the file to be publicly viewable
 		 builder.acl("public-read"); 
@@ -112,7 +113,7 @@ public class QueryServlet extends HttpServlet
   		 outputChannel = gcsService.createOrReplace(gcsFile, instance);
   		 copy(filePart.getInputStream(), Channels.newOutputStream(outputChannel)); **/
   		 System.out.println("Writing file to cloud storage .....");
-  		 response.getWriter().print(blob.getMediaLink());
+  		 
 		 //return filename; // Return the filename without GCS/bucket appendage
 		 outPage.println("<html>");
          outPage.println("<head>");
