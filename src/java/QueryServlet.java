@@ -120,7 +120,7 @@ public class QueryServlet extends HttpServlet
          //outPage.println("<title>Query Servlet</title>");  
          //outPage.println("</head>");
          //outPage.println("<body>");
-         outPage.println("Uploaded Filename: " + fileName + "<br>");
+         outPage.println("Uploaded Filename: " + fileName);
          //outPage.println("<br>");
          //outPage.println("<br>");
          System.out.println("File name is: "+fileName);
