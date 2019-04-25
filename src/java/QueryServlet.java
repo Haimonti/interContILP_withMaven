@@ -115,14 +115,14 @@ public class QueryServlet extends HttpServlet
   		 System.out.println("Writing file to cloud storage .....");
   		 
 		 //return filename; // Return the filename without GCS/bucket appendage
-		 outPage.println("<html>");
-         outPage.println("<head>");
-         outPage.println("<title>Query Servlet</title>");  
-         outPage.println("</head>");
-         outPage.println("<body>");
+		 //outPage.println("<html>");
+         //outPage.println("<head>");
+         //outPage.println("<title>Query Servlet</title>");  
+         //outPage.println("</head>");
+         //outPage.println("<body>");
          outPage.println("Uploaded Filename: " + fileName + "<br>");
-         outPage.println("<br>");
-         outPage.println("<br>");
+         //outPage.println("<br>");
+         //outPage.println("<br>");
          System.out.println("File name is: "+fileName);
 		 fileContent = filePart.getInputStream();
 		 
@@ -150,11 +150,11 @@ public class QueryServlet extends HttpServlet
 		 outputContent.close();
 		 fileContent.close(); 
  		 outPage.println("The uploaded file has been written on the server ....");  
- 		 outPage.println("<br>");
- 		 outPage.println("<br>");
+ 		 //outPage.println("<br>");
+ 		 //outPage.println("<br>");
  		 outPage.println("Calling the union script on the server ...."); 
- 		 outPage.println("<br>");
- 		 outPage.println("<br>");
+ 		 //outPage.println("<br>");
+ 		 //outPage.println("<br>");
  		 
  		 String scriptPath = "/software/yap-6.2.2/";
  		 String script = "union_features_v1.sh";
@@ -232,13 +232,13 @@ public class QueryServlet extends HttpServlet
         	//Finally write the union file to the bucket
    		 
  		 outPage.println("Done! Server now has the union of the uploaded feature file and its local feature file ...."); 
- 		 outPage.println("<br>");
- 		 outPage.println("<br>");
+ 		 //outPage.println("<br>");
+ 		 //outPage.println("<br>");
  		 outPage.println("Build a local model on the server ....");
- 		 outPage.println("<br>");
- 		 outPage.println("<br>");
-         outPage.println("</body>");
-         outPage.println("</html>");
+ 		 //outPage.println("<br>");
+ 		 //outPage.println("<br>");
+         //outPage.println("</body>");
+         //outPage.println("</html>");
          } 
          catch(Exception ex) 
          {
