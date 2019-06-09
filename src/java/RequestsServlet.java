@@ -50,13 +50,23 @@ public class RequestsServlet extends HttpServlet
             InputStreamReader isr = new InputStreamReader(is);
             BufferedReader reader = new BufferedReader(isr);
             PrintWriter writer = response.getWriter();
+            writer.println("<html>");
+         	writer.println("<head>");
+         	writer.println("<title>Requests Servlet</title>");  
+         	writer.println("</head>");
+         	writer.println("<body>");
             String text;
+            writer.println("Here is the feature file stored on the server");
+            writer.println("</br>");
+            writer.println("</br>");
 			// We read the file line by line and later will be displayed on the
             // browser page.
             while ((text = reader.readLine()) != null) 
             {
                 writer.println(text + "</br>");
             }
+            writer.println("</body>");
+         	writer.println("</html>");
         }
         } // End of the doGet Method
   
