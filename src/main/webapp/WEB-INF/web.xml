@@ -14,6 +14,11 @@
     			<file-size-threshold>1048576</file-size-threshold>
 			</multipart-config>
    		</servlet>
+   		
+   		<servlet>
+      		<servlet-name>RequestsServlet</servlet-name>
+      		<servlet-class>RequestsServlet</servlet-class>
+   		</servlet>
  
    		<!-- Note: All <servlet> elements MUST be grouped together and
          placed IN FRONT of the <servlet-mapping> elements -->
@@ -21,6 +26,11 @@
         <servlet-mapping>
       		<servlet-name>QueryServlet</servlet-name>
       		<url-pattern>/QueryServlet</url-pattern>
+   		</servlet-mapping>
+   		
+   		<servlet-mapping>
+      		<servlet-name>RequestsServlet</servlet-name>
+      		<url-pattern>/RequestsServlet</url-pattern>
    		</servlet-mapping>
  
 </web-app>

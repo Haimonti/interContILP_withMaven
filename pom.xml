@@ -9,6 +9,9 @@
 
 	<name>QueryServlet</name>
 	<url>/QueryServlet</url>
+	
+	<name>RequestsServlet</name>
+	<url>/RequestsServlet</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
