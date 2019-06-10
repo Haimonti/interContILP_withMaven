@@ -51,6 +51,8 @@ public class RequestsServlet extends HttpServlet
             {
                 out.write(buffer, 0, numBytesRead);
             }
+            in.close();
+            out.flush();
            }  
          catch(Exception e)
          {
