@@ -39,36 +39,23 @@ public class RequestsServlet extends HttpServlet
  	  public void doGet(HttpServletRequest request, HttpServletResponse response)
          throws IOException, ServletException 
         {
-        response.setContentType("text/html");
-        String filename = "/WEB-INF/feature_v1a.pl";
-         ServletContext context = getServletContext();
-		// First get the file InputStream using ServletContext.getResourceAsStream()
-        // method.
-        InputStream is = context.getResourceAsStream(filename);
-        if (is != null) 
-        {
-            InputStreamReader isr = new InputStreamReader(is);
-            BufferedReader reader = new BufferedReader(isr);
-            PrintWriter writer = response.getWriter();
-            writer.println("<html>");
-         	writer.println("<head>");
-         	writer.println("<title>Requests Servlet</title>");  
-         	writer.println("</head>");
-         	writer.println("<body>");
-            String text;
-            writer.println("Here is the feature file stored on the server");
-            writer.println("</br>");
-            writer.println("</br>");
-			// We read the file line by line and later will be displayed on the
-            // browser page.
-            while ((text = reader.readLine()) != null) 
+        response.setContentType("text/plain");
+        response.setHeader("Content-disposition", "attachment; filename=feature_v1a.pl");
+        try(InputStream in = req.getServletContext().getResourceAsStream("/WEB-INF/feature_v1a.pl");
+          OutputStream out = resp.getOutputStream()) 
+          {
+ 		    byte[] buffer = new byte[ARBITARY_SIZE];
+         	int numBytesRead;
+            while ((numBytesRead = in.read(buffer)) > 0) 
             {
-                writer.println(text + "</br>");
+                out.write(buffer, 0, numBytesRead);
             }
-            writer.println("</body>");
-         	writer.println("</html>");
-        }
-        } // End of the doGet Method
+           }  
+         catch(Exception e)
+         {
+         System.out.println(e);
+         }      
+} // End of the doGet Method
   
 
 }// end of QueryServlet class
