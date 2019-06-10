@@ -41,8 +41,8 @@ public class RequestsServlet extends HttpServlet
         {
         response.setContentType("text/plain");
         response.setHeader("Content-disposition", "attachment; filename=feature_v1a.pl");
-        try(InputStream in = req.getServletContext().getResourceAsStream("/WEB-INF/feature_v1a.pl");
-          OutputStream out = resp.getOutputStream()) 
+        try(InputStream in = request.getServletContext().getResourceAsStream("/WEB-INF/feature_v1a.pl");
+          OutputStream out = response.getOutputStream()) 
           {
  		    byte[] buffer = new byte[ARBITARY_SIZE];
          	int numBytesRead;
