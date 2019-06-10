@@ -35,6 +35,7 @@ import javax.servlet.ServletContext;
 
 public class RequestsServlet extends HttpServlet 
 {  
+	  private final int ARBITARY_SIZE = 1048;
 	  // Given a node, the goal is to receive a feature file and read its contents
  	  public void doGet(HttpServletRequest request, HttpServletResponse response)
          throws IOException, ServletException 
