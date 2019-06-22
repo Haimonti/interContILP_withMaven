@@ -22,6 +22,10 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 import java.nio.file.Paths;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Scanner;
+import java.util.concurrent.Executors;
 //import java.nio.channels.Channels;
 //import org.joda.time.format.DateTimeFormatter;
 //import org.joda.time.DateTimeZone;
@@ -36,12 +40,23 @@ import javax.servlet.ServletContext;
 public class RequestsServlet extends HttpServlet 
 {  
 	  private final int ARBITARY_SIZE = 1048;
+	  // source acts as the distributor of new messages 
+	  MessageSource source = new MessageSource(); 
+	  // socketClients holds references to all the socket-connected clients 
+	  Vector socketClients = new Vector();
+	  
 	  // Given a node, the goal is to receive a feature file and read its contents
  	  public void doGet(HttpServletRequest request, HttpServletResponse response)
          throws IOException, ServletException 
         {
         response.setContentType("text/plain");
         response.setHeader("Content-disposition", "attachment; filename=feature_v1a.pl");
+        
+        //This servlet broadcasts that it is done with local computation
+        String msg ="Done with local computation. Ready to receive features ....";
+        //Broadcast this message to neighbors
+        broadcastMessage(msg);
+        
         try(InputStream in = request.getServletContext().getResourceAsStream("/WEB-INF/feature_v1a.pl");
           OutputStream out = response.getOutputStream()) 
           {
@@ -60,5 +75,31 @@ public class RequestsServlet extends HttpServlet
          }      
 } // End of the doGet Method
   
+  	public void broadcastMessage(String message) 
+  	{ 
+  		source.sendMessage(message); 
+  		// Directly send the message to all the socket-connected clients
+  		Enumeration enum = socketClients.elements(); 
+  		while (enum.hasMoreElements()) 
+  		{ Socket client = null; 
+  		  try 
+  		  { 
+  		    client = (Socket)enum.nextElement(); 
+  		    PrintStream out = new PrintStream(client.getOutputStream());      
+   			out.println(message); 
+  		    }
+  		     catch (IOException e) 
+  		     { // Problem with a client, close and remote it 
+  		     try 
+				 { 
+				 if (client != null) client.close(); 
+				 } 
+  		     catch (IOException ignored) 
+				 { 
+				 } 
+  		     socketClients.removeElement(client); 
+  		     } // end of catch 
+  		  } // end of enum loop
+  	}
 
-}// end of QueryServlet class
+}// end of RequestsServlet class
