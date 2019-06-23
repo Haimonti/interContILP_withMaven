@@ -39,11 +39,12 @@ import javax.servlet.ServletContext;
 
 public class RequestsServlet extends HttpServlet 
 {  
-	  private final int ARBITARY_SIZE = 1048;
+	
+	  //private final int ARBITARY_SIZE = 1048;
 	  // source acts as the distributor of new messages 
-	  MessageSource source = new MessageSource(); 
-	  // socketClients holds references to all the socket-connected clients 
-	  Vector socketClients = new Vector();
+	  // MessageSource source = new MessageSource(); 
+	  //socketClients holds references to all the socket-connected clients 
+      // Vector socketClients = new Vector();
 	  
 	  // Given a node, the goal is to receive a feature file and read its contents
  	  public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -51,13 +52,26 @@ public class RequestsServlet extends HttpServlet
         {
         response.setContentType("text/plain");
         response.setHeader("Content-disposition", "attachment; filename=feature_v1a.pl");
+        // This server is going to listen on port 59898
+        // and will allow its neighbors to connect to it.
+        try (ServerSocket listener = new ServerSocket(59898)) 
+        {
+            System.out.println("The US-east server is running...");
+            //The server should execute its local feature generation process
+            //This ServerSocket servlet broadcasts that it is done with local computation
+        	//String msg ="Done with local computation. Ready to receive features ....";
+        	//Broadcast this message to neighbors
+        	//broadcastMessage(msg);
+            pool = Executors.newFixedThreadPool(20);
+            while (true) 
+            {
+                pool.execute(new RequestFiles(listener.accept()));
+            }
+        }
+        } // End of the doGet Method
         
-        //This servlet broadcasts that it is done with local computation
-        String msg ="Done with local computation. Ready to receive features ....";
-        //Broadcast this message to neighbors
-        broadcastMessage(msg);
-        
-        try(InputStream in = request.getServletContext().getResourceAsStream("/WEB-INF/feature_v1a.pl");
+       /* 
+ try(InputStream  in=request.getServletContext().getResourceAsStream("/WEB-INF/feature_v1a.pl");
           OutputStream out = response.getOutputStream()) 
           {
  		    byte[] buffer = new byte[ARBITARY_SIZE];
@@ -72,10 +86,51 @@ public class RequestsServlet extends HttpServlet
          catch(Exception e)
          {
          System.out.println(e);
-         }      
-} // End of the doGet Method
+         }   
+ */   
+		
   
-  	public void broadcastMessage(String message) 
+  		// Connects to neighbors
+  		public class RequestFiles implements Runnable 
+  		{
+        private Socket socket;
+
+        RequestFiles(Socket socket) 
+        {
+            this.socket = socket;
+        }
+
+        public void run() 
+        {
+            System.out.println("Connected: " + socket);
+            try 
+            {
+                in = new Scanner(socket.getInputStream());
+                out = new PrintWriter(socket.getOutputStream(), true);
+                while (in.hasNextLine()) 
+                {
+                    out.println(in.nextLine());
+                }
+            } 
+            catch (Exception e) 
+            {
+                System.out.println("Error:" + socket);
+            } 
+            finally 
+            {
+                try 
+                { 
+                 socket.close(); 
+                 } 
+                 catch (IOException e) 
+                 {}
+                System.out.println("Closed: " + socket);
+            }
+          } // End of run method
+    } // End of RequestFiles class
+
+  	/* 
+public void broadcastMessage(String message) 
   	{ 
   		source.sendMessage(message); 
   		// Directly send the message to all the socket-connected clients
@@ -101,5 +156,6 @@ public class RequestsServlet extends HttpServlet
   		     } // end of catch 
   		  } // end of enum loop
   	}
+ */
 
 }// end of RequestsServlet class
