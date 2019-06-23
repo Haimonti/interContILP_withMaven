@@ -36,7 +36,7 @@ import javax.servlet.http.*;
 import java.io.FileOutputStream;
 import javax.servlet.ServletContext;
 
-public class RequestsServlet extends HttpServlet implements Runnable
+public class RequestsServlet extends HttpServlet
 {  
 	
 	  //private final int ARBITARY_SIZE = 1048;
@@ -44,7 +44,7 @@ public class RequestsServlet extends HttpServlet implements Runnable
 	  // MessageSource source = new MessageSource(); 
 	  //socketClients holds references to all the socket-connected clients 
       // Vector socketClients = new Vector();
-	  private final ExecutorService pool;
+	  ExecutorService pool=null;
 	  
 	  // Given a node, the goal is to receive a feature file and read its contents
  	  public void doGet(HttpServletRequest request, HttpServletResponse response)
