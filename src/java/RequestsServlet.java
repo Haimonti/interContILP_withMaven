@@ -50,7 +50,7 @@ public class RequestsServlet extends HttpServlet
 	  
 	  // Given a node, the goal is to receive a feature file and read its contents
  	  public void doGet(HttpServletRequest request, HttpServletResponse response)
-         throws Exception 
+         throws IOException, ServletException 
         {
         response.setContentType("text/plain");
         response.setHeader("Content-disposition", "attachment; filename=feature_v1a.pl");
@@ -77,10 +77,6 @@ public class RequestsServlet extends HttpServlet
             {
                 pool.execute(new RequestFiles(listener.accept()));
             }
-        }
-        catch(Exception e)
-        {
-         e.PrintStackTrace();
         }
         
         } // End of the doGet Method
@@ -138,7 +134,7 @@ public class RequestsServlet extends HttpServlet
                  socket.close(); 
                  } 
                  catch (IOException e) 
-                 {e.PrintStackTrace();}
+                 {e.printStackTrace();}
                 System.out.println("Closed: " + socket);
             }
           } // End of run method
