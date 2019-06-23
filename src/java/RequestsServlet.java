@@ -36,7 +36,7 @@ import javax.servlet.http.*;
 import java.io.FileOutputStream;
 import javax.servlet.ServletContext;
 
-public class RequestsServlet extends HttpServlet, Executor 
+public class RequestsServlet extends HttpServlet implements Runnable
 {  
 	
 	  //private final int ARBITARY_SIZE = 1048;
@@ -89,7 +89,8 @@ c	  private final ExecutorService pool;
          }   
  */   
 		
-  
+  		 public void run() 
+        {}
        // Connects to neighbors
       public class RequestFiles implements Runnable 
       {
