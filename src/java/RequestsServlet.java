@@ -158,4 +158,8 @@ public void broadcastMessage(String message)
   	}
  */
 
+<<<<<<< HEAD
+}// end of QueryServlet class
+=======
 }// end of RequestsServlet class
+>>>>>>> ce5d5c1c9bd1c5c04c2bec6e7ec12ad662388bf2
