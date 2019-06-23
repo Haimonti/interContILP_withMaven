@@ -50,33 +50,37 @@ public class RequestsServlet extends HttpServlet
 	  
 	  // Given a node, the goal is to receive a feature file and read its contents
  	  public void doGet(HttpServletRequest request, HttpServletResponse response)
-         throws IOException, ServletException 
+         throws Exception 
         {
         response.setContentType("text/plain");
         response.setHeader("Content-disposition", "attachment; filename=feature_v1a.pl");
         
         PrintWriter outStr = response.getWriter();
         outStr.println("<html>");
-      	outStr.println("<head><title>Hello, World</title></head>");
+      	outStr.println("<head><title>Server Running</title></head>");
       	outStr.println("<body>");
-      	
+      	outStr.println("The US-east server is running...");
+      	outStr.println("</body></html>");
+    	outStr.close(); 
         // This server is going to listen on port 5999
         // and will allow its neighbors to connect to it.
         try (ServerSocket listener = new ServerSocket(5999)) 
         {
-            outStr.println("The US-east server is running...");
             //The server should execute its local feature generation process
             //This ServerSocket servlet broadcasts that it is done with local computation
-        	//String msg ="Done with local computation. Ready to receive features ....";
+        	System.out.println("Done with local computation. Ready to receive features ....");
         	//Broadcast this message to neighbors
         	//broadcastMessage(msg);
- 			outStr.println("</body></html>");
-            outStr.close();   
+ 			  
             pool = Executors.newFixedThreadPool(20);
             while (true) 
             {
                 pool.execute(new RequestFiles(listener.accept()));
             }
+        }
+        catch(Exception e)
+        {
+         e.PrintStackTrace();
         }
         
         } // End of the doGet Method
@@ -134,7 +138,7 @@ public class RequestsServlet extends HttpServlet
                  socket.close(); 
                  } 
                  catch (IOException e) 
-                 {}
+                 {e.PrintStackTrace();}
                 System.out.println("Closed: " + socket);
             }
           } // End of run method
