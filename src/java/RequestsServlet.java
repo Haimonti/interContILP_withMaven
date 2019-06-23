@@ -91,9 +91,9 @@ public class RequestsServlet extends HttpServlet
  */   
 		
   
-  		// Connects to neighbors
-  		public class RequestFiles implements Runnable 
-  		{
+       // Connects to neighbors
+      public class RequestFiles implements Runnable 
+      {
         private Socket socket;
 
         RequestFiles(Socket socket) 
@@ -158,9 +158,5 @@ public void broadcastMessage(String message)
   		  } // end of enum loop
   	}
  */
-
-<<<<<<< HEAD
-}// end of QueryServlet class
-=======
 }// end of RequestsServlet class
->>>>>>> ce5d5c1c9bd1c5c04c2bec6e7ec12ad662388bf2
+
