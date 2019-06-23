@@ -3,12 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>interContILP_WithMaven</groupId>
-	<artifactId>QueryServlet</artifactId>
+	<artifactId>RequestsServlet</artifactId>
 	<version>1</version>
 	<packaging>war</packaging>
-
-	<name>QueryServlet</name>
-	<url>/QueryServlet</url>
 	
 	<name>RequestsServlet</name>
 	<url>/RequestsServlet</url>

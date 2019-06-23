@@ -44,12 +44,9 @@ public class RequestsServlet extends HttpServlet
 	  // source acts as the distributor of new messages 
 	  // MessageSource source = new MessageSource(); 
 	  //socketClients holds references to all the socket-connected clients 
-      // Vector socketClients = new Vector();
-<<<<<<< HEAD
-c	  private final ExecutorService pool;
-=======
+          // Vector socketClients = new Vector();
 	  ExecutorService pool=null;
->>>>>>> 317438c13d20a11dd3b9238dbba6a9cbf8a1d5e2
+
 	  
 	  // Given a node, the goal is to receive a feature file and read its contents
  	  public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -94,8 +91,7 @@ c	  private final ExecutorService pool;
          }   
  */   
 		
-  		 public void run() 
-        {}
+      
        // Connects to neighbors
       public class RequestFiles implements Runnable 
       {
