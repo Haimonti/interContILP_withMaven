@@ -40,7 +40,7 @@ import javax.servlet.ServletContext;
 public class RequestsServlet extends HttpServlet
 {  
 	
-	  //private final int ARBITARY_SIZE = 1048;
+	  private final int ARBITARY_SIZE = 1048;
 	  // source acts as the distributor of new messages 
 	  // MessageSource source = new MessageSource(); 
 	  //socketClients holds references to all the socket-connected clients 
@@ -54,12 +54,17 @@ public class RequestsServlet extends HttpServlet
         {
         response.setContentType("text/plain");
         response.setHeader("Content-disposition", "attachment; filename=feature_v1a.pl");
-        OutputStream outStr = response.getOutputStream();
+        
+        PrintWriter outStr = response.getWriter();
+        outStr.println("<html>");
+      	outStr.println("<head><title>Hello, World</title></head>");
+      	outStr.println("<body>");
+      	
         // This server is going to listen on port 5999
         // and will allow its neighbors to connect to it.
         try (ServerSocket listener = new ServerSocket(5999)) 
         {
-            outStr.write("The US-east server is running...");
+            outStr.println("The US-east server is running...");
             //The server should execute its local feature generation process
             //This ServerSocket servlet broadcasts that it is done with local computation
         	//String msg ="Done with local computation. Ready to receive features ....";
@@ -71,6 +76,8 @@ public class RequestsServlet extends HttpServlet
                 pool.execute(new RequestFiles(listener.accept()));
             }
         }
+        outStr.println("</body></html>");
+        outStr.close();
         } // End of the doGet Method
         
        /* 
