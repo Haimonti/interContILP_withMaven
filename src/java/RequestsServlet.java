@@ -45,6 +45,7 @@ public class RequestsServlet extends HttpServlet
 	  // MessageSource source = new MessageSource(); 
 	  //socketClients holds references to all the socket-connected clients 
       // Vector socketClients = new Vector();
+      
 	  
 	  // Given a node, the goal is to receive a feature file and read its contents
  	  public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -62,7 +63,7 @@ public class RequestsServlet extends HttpServlet
         	//String msg ="Done with local computation. Ready to receive features ....";
         	//Broadcast this message to neighbors
         	//broadcastMessage(msg);
-            pool = Executors.newFixedThreadPool(20);
+            ExecutorService pool = Executors.newFixedThreadPool(20);
             while (true) 
             {
                 pool.execute(new RequestFiles(listener.accept()));
@@ -105,8 +106,8 @@ public class RequestsServlet extends HttpServlet
             System.out.println("Connected: " + socket);
             try 
             {
-                in = new Scanner(socket.getInputStream());
-                out = new PrintWriter(socket.getOutputStream(), true);
+                Scanner in = new Scanner(socket.getInputStream());
+                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
                 while (in.hasNextLine()) 
                 {
                     out.println(in.nextLine());
