@@ -17,7 +17,6 @@ import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
  */
-import com.google.common.util.concurrent.*;
 import java.io.*;
 import java.util.*;
 import java.net.*;
@@ -37,7 +36,7 @@ import javax.servlet.http.*;
 import java.io.FileOutputStream;
 import javax.servlet.ServletContext;
 
-public class RequestsServlet extends HttpServlet 
+public class RequestsServlet extends HttpServlet, Executor 
 {  
 	
 	  //private final int ARBITARY_SIZE = 1048;
