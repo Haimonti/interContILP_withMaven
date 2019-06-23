@@ -54,11 +54,12 @@ public class RequestsServlet extends HttpServlet
         {
         response.setContentType("text/plain");
         response.setHeader("Content-disposition", "attachment; filename=feature_v1a.pl");
+        OutputStream outStr = response.getOutputStream()
         // This server is going to listen on port 59898
         // and will allow its neighbors to connect to it.
         try (ServerSocket listener = new ServerSocket(59898)) 
         {
-            System.out.println("The US-east server is running...");
+            outStr.write("The US-east server is running...");
             //The server should execute its local feature generation process
             //This ServerSocket servlet broadcasts that it is done with local computation
         	//String msg ="Done with local computation. Ready to receive features ....";
