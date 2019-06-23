@@ -70,14 +70,15 @@ public class RequestsServlet extends HttpServlet
         	//String msg ="Done with local computation. Ready to receive features ....";
         	//Broadcast this message to neighbors
         	//broadcastMessage(msg);
+ 			outStr.println("</body></html>");
+            outStr.close();   
             pool = Executors.newFixedThreadPool(20);
             while (true) 
             {
                 pool.execute(new RequestFiles(listener.accept()));
             }
         }
-        outStr.println("</body></html>");
-        outStr.close();
+        
         } // End of the doGet Method
         
        /* 
