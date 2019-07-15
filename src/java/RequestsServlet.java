@@ -39,134 +39,80 @@ import javax.servlet.ServletContext;
 
 public class RequestsServlet extends HttpServlet
 {  
-	
-	  private final int ARBITARY_SIZE = 1048;
-	  // source acts as the distributor of new messages 
-	  // MessageSource source = new MessageSource(); 
-	  //socketClients holds references to all the socket-connected clients 
-          // Vector socketClients = new Vector();
-	  ExecutorService pool=null;
-
-	  
-	  // Given a node, the goal is to receive a feature file and read its contents
+	// Given a node, the goal is to receive a feature file and read its contents
  	  public void doGet(HttpServletRequest request, HttpServletResponse response)
          throws IOException, ServletException 
         {
-        response.setContentType("text/plain");
-        response.setHeader("Content-disposition", "attachment; filename=feature_v1a.pl");
-        
-        PrintWriter outStr = response.getWriter();
-        outStr.println("<html>");
-      	outStr.println("<head><title>Server Running</title></head>");
-      	outStr.println("<body>");
-      	outStr.println("The US-east server is running...");
-      	outStr.println("</body></html>");
-    	outStr.close(); 
-        // This server is going to listen on port 5999
-        // and will allow its neighbors to connect to it.
-        try (ServerSocket listener = new ServerSocket(5999)) 
-        {
-            //The server should execute its local feature generation process
-            //This ServerSocket servlet broadcasts that it is done with local computation
-        	System.out.println("Done with local computation. Ready to receive features ....");
-        	//Broadcast this message to neighbors
-        	//broadcastMessage(msg);
- 			  
+        	ExecutorService pool=null;
+            try(ServerSocket serverSocket = new ServerSocket(59090))
+            {
+            System.out.println("The server is waiting to get more features ...");
             pool = Executors.newFixedThreadPool(20);
             while (true) 
             {
-                pool.execute(new RequestFiles(listener.accept()));
+                pool.execute(new Reader(serverSocket.accept()));
             }
-        }
-        
+            }
+        	//Socket clientSocket = serverSocket.accept();
         } // End of the doGet Method
-        
-       /* 
- try(InputStream  in=request.getServletContext().getResourceAsStream("/WEB-INF/feature_v1a.pl");
-          OutputStream out = response.getOutputStream()) 
-          {
- 		    byte[] buffer = new byte[ARBITARY_SIZE];
-         	int numBytesRead;
-            while ((numBytesRead = in.read(buffer)) > 0) 
+            
+        public class Reader implements Runnable
+        {
+            private Socket socket;
+            // This is the constructor to the class
+            Reader (Socket clientSocket)
             {
-                out.write(buffer, 0, numBytesRead);
+             	this.socket = clientSocket;
             }
-            in.close();
-            out.flush();
-           }  
-         catch(Exception e)
-         {
-         System.out.println(e);
-         }   
- */   
-		
-      
-       // Connects to neighbors
-      public class RequestFiles implements Runnable 
-      {
-        private Socket socket;
-
-        RequestFiles(Socket socket) 
-        {
-            this.socket = socket;
-        }
-
-        public void run() 
-        {
-            System.out.println("Connected: " + socket);
-            try 
-            {
-                Scanner in = new Scanner(socket.getInputStream());
-                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                while (in.hasNextLine()) 
-                {
-                    out.println(in.nextLine());
-                }
-            } 
-            catch (Exception e) 
-            {
-                System.out.println("Error:" + socket);
-            } 
-            finally 
-            {
+            	 
+            public void run() 
+        	{
+              System.out.println("Connected: " + socket);	 
+              try
+              {
+              
+              //Try to get the feature file from client
+              
+              
+              // Send its current file to the client
+              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+    		  BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			  out.println("Sending feature_v1a.pl to client ...");
+			
+			  String filename = "/WEB-INF/feature_v1a.pl";
+         	  ServletContext context = getServletContext();
+			  // First get the file InputStream using ServletContext.getResourceAsStream()
+        	  // method.
+        	  InputStream is = context.getResourceAsStream(filename);
+        	  if (is != null) 
+        	  {
+				  InputStreamReader isr = new InputStreamReader(is);
+				  BufferedReader reader = new BufferedReader(isr);
+				  //PrintWriter writer = response.getWriter();
+				  String text;
+				  // We read the file line by line and later will be displayed on the
+				  // browser page.
+				  while ((text = reader.readLine()) != null) 
+				  {
+					out.println(text);
+				  }
+       	   	  }
+       	   	  }
+       	   	  catch(Exception e)
+       	   	  {
+       	   	   e.printStackTrace();
+       	   	  }
+       	   	  finally 
+       	   	  {
                 try 
                 { 
                  socket.close(); 
-                 } 
-                 catch (IOException e) 
-                 {e.printStackTrace();}
+                } 
+                catch (IOException e) {}
                 System.out.println("Closed: " + socket);
-            }
-          } // End of run method
-    } // End of RequestFiles class
-
-  	/* 
-public void broadcastMessage(String message) 
-  	{ 
-  		source.sendMessage(message); 
-  		// Directly send the message to all the socket-connected clients
-  		Enumeration enum = socketClients.elements(); 
-  		while (enum.hasMoreElements()) 
-  		{ Socket client = null; 
-  		  try 
-  		  { 
-  		    client = (Socket)enum.nextElement(); 
-  		    PrintStream out = new PrintStream(client.getOutputStream());      
-   			out.println(message); 
-  		    }
-  		     catch (IOException e) 
-  		     { // Problem with a client, close and remote it 
-  		     try 
-				 { 
-				 if (client != null) client.close(); 
-				 } 
-  		     catch (IOException ignored) 
-				 { 
-				 } 
-  		     socketClients.removeElement(client); 
-  		     } // end of catch 
-  		  } // end of enum loop
-  	}
- */
+              }
+       	   }// End of run() method
+       	   
+       	   } // End of Reader class
 }// end of RequestsServlet class
 
