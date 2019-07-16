@@ -92,7 +92,7 @@ public class RequestsServlet extends HttpServlet
 		    // Attempt connection
 		    Future<Session> future = webSocketClient.connect(clientSocket,new URI(getWebSocketAddress()), request);
 		    // Wait for Connect
-		    Session serverSession = future.get()
+		    Session serverSession = future.get();
            //  try(ServerSocket serverSocket = new ServerSocket())
 //             {
             System.out.println("The server is waiting to get more features ...");
