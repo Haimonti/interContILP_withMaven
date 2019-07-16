@@ -88,15 +88,17 @@ public class RequestsServlet extends HttpServlet
 		    // Attempt connection
 		    Future<Session> future = webSocketClient.connect(clientSocket,new URI(getWebSocketAddress()), request);
 		    // Wait for Connect
-		    Session serverSession = future.get();
+		    try(Session serverSession = future.get())
+		    {
            //  try(ServerSocket serverSocket = new ServerSocket())
 //             {
-            System.out.println("The server is waiting to get more features ...");
+             System.out.println("The server is waiting to get more features ...");
     			//Try accepting client connections
-            if(clientSocket.onConnect(serverSession))
-            {
+             while(clientSocket.onConnect(serverSession))
+             {
               System.out.println("Client is now connected to server ...");  
-            }
+             }
+             }
         } // End of the doGet Method
             
        public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException 
