@@ -48,116 +48,80 @@ import org.eclipse.jetty.websocket.common.scopes.SimpleContainerScope;
 
 public class RequestsServlet extends HttpServlet
 {  
-	private final WebSocketClient webSocketClient;
-  	private final ClientSocket clientSocket;
-	private static final String ENDPOINT = "/echo";
-  	private static final String WEBSOCKET_PROTOCOL_PREFIX = "ws://";
-  	private static final String WEBSOCKET_HTTPS_PROTOCOL_PREFIX = "wss://";
-  	private static final String APPENGINE_HOST_SUFFIX = ".appspot.com";
-
-  	// GAE_INSTANCE environment is used to detect App Engine Flexible Environment
-  	private static final String GAE_INSTANCE_VAR = "GAE_INSTANCE";
-  	// GOOGLE_CLOUD_PROJECT environment variable is set to the GCP project ID on App Engine Flexible.
-  	private static final String GOOGLE_CLOUD_PROJECT_ENV_VAR = "GOOGLE_CLOUD_PROJECT";
-  	// GAE_SERVICE environment variable is set to the GCP service name.
-  	private static final String GAE_SERVICE_ENV_VAR = "GAE_SERVICE";
-  
-  	public RequestsServlet() 
-  	{
-    	this.webSocketClient = createWebSocketClient();
-    	this.clientSocket = new ClientSocket();
-  	}
-  	
-	  // Given a node, the goal is to receive a feature file and read its contents
+	// Given a node, the goal is to receive a feature file and read its contents
  	  public void doGet(HttpServletRequest request, HttpServletResponse response)
          throws IOException, ServletException 
         {
+        	ExecutorService pool=null;
+            try(ServerSocket serverSocket = new ServerSocket(59090))
+            {
+            System.out.println("The server is waiting to get more features ...");
+            pool = Executors.newFixedThreadPool(20);
+            while (true) 
+            {
+                pool.execute(new Reader(serverSocket.accept()));
+            }
+            }
+        	//Socket clientSocket = serverSocket.accept();
         } // End of the doGet Method
             
-       public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException 
-       {
-    	 String message = request.getParameter("message");
-    	 try 
-    	 {
-           sendMessageOverWebSocket(message);
-           response.sendRedirect("/");
-    	  } 
-    	 catch (Exception e) 
-    	 {
-           e.printStackTrace(response.getWriter());
-           response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR_500);
-          }
-        } // end of the doPost Method
-        
-      private void sendMessageOverWebSocket(String message) throws Exception 
-      {
-       if (!webSocketClient.isRunning()) 
-       {
-        try 
+        public class Reader implements Runnable
         {
-        webSocketClient.start();
-         } 
-        catch (URISyntaxException e) 
-        {
-         e.printStackTrace();
-        }
-       } // end if webSocketClient not running
-		  ClientUpgradeRequest request = new ClientUpgradeRequest();
-		  // Attempt connection
-		  Future<Session> future = webSocketClient.connect(clientSocket,new URI(getWebSocketAddress()), request);
-		  // Wait for Connect
-		  Session session = future.get();
-		  // Send a message
-		  session.getRemote().sendString(message);
-		  // Close session
-		  session.close();
-      }     
-      
-      
-       private WebSocketClient createWebSocketClient() 
-       {
-    	 WebSocketClient webSocketClient;
-    	 if (System.getenv(GAE_INSTANCE_VAR) != null) 
-    	 {
-      		// If on HTTPS, create client with SSL Context
-         SslContextFactory sslContextFactory = new SimpleContainerScope(WebSocketPolicy.newClientPolicy()).getSslContextFactory();
-         webSocketClient = new WebSocketClient(sslContextFactory);
-         } 
-         else 
-         {
-      		// local testing on HTTP
-      	    webSocketClient = new WebSocketClient();
-          }
-         return webSocketClient;
-       }
-   
-   
-   		/**
-  		 * Returns the host:port/echo address a client needs to use to communicate with the server.
-   		 * On App engine Flex environments, result will be in the form wss://project-id.appspot.com/echo
-  		 */
-  		public static String getWebSocketAddress() 
-  		{
-    		// Use ws://127.0.0.1:8080/echo when testing locally
-    		//String webSocketHost = "127.0.0.1:8080";
-    		//String webSocketProtocolPrefix = WEBSOCKET_PROTOCOL_PREFIX;
-
-    		// On App Engine flexible environment, use wss://project-id.appspot.com/echo
-    		if (System.getenv(GAE_INSTANCE_VAR) != null) 
-    		{
-      			String projectId = System.getenv(GOOGLE_CLOUD_PROJECT_ENV_VAR);
-      			if (projectId != null) 
-      			{
-        			String serviceName = System.getenv(GAE_SERVICE_ENV_VAR);
-       			    webSocketHost = serviceName + "-dot-" + projectId + APPENGINE_HOST_SUFFIX;
-      			}
-      			Preconditions.checkNotNull(webSocketHost);
-      			// Use wss:// instead of ws:// protocol when connecting over https
-      			webSocketProtocolPrefix = WEBSOCKET_HTTPS_PROTOCOL_PREFIX;
-   			 }
-    		return webSocketProtocolPrefix + webSocketHost + ENDPOINT;
-  		} // end of getWebSocketAddress
-  
-        
+            private Socket socket;
+            // This is the constructor to the class
+            Reader (Socket clientSocket)
+            {
+             	this.socket = clientSocket;
+            }
+            	 
+            public void run() 
+        	{
+              System.out.println("Connected: " + socket);	 
+              try
+              {
+              
+              //Try to get the feature file from client
+              
+              
+              // Send its current file to the client
+              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+    		  BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			  out.println("Sending feature_v1a.pl to client ...");
+			
+			  String filename = "/WEB-INF/feature_v1a.pl";
+         	  ServletContext context = getServletContext();
+			  // First get the file InputStream using ServletContext.getResourceAsStream()
+        	  // method.
+        	  InputStream is = context.getResourceAsStream(filename);
+        	  if (is != null) 
+        	  {
+				  InputStreamReader isr = new InputStreamReader(is);
+				  BufferedReader reader = new BufferedReader(isr);
+				  //PrintWriter writer = response.getWriter();
+				  String text;
+				  // We read the file line by line and later will be displayed on the
+				  // browser page.
+				  while ((text = reader.readLine()) != null) 
+				  {
+					out.println(text);
+				  }
+       	   	  }
+       	   	  }
+       	   	  catch(Exception e)
+       	   	  {
+       	   	   e.printStackTrace();
+       	   	  }
+       	   	  finally 
+       	   	  {
+                try 
+                { 
+                 socket.close(); 
+                } 
+                catch (IOException e) {}
+                System.out.println("Closed: " + socket);
+              }
+       	   }// End of run() method
+       	   
+       	   } // End of Reader class  
 }// end of RequestsServlet class
 
