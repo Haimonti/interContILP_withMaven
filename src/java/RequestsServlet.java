@@ -70,7 +70,7 @@ public class RequestsServlet extends HttpServlet
   	}
   	
 	  // Given a node, the goal is to receive a feature file and read its contents
- 	  public void doGet(HttpServletRequest request, HttpServletResponse response)
+ 	  public void doGet(HttpServletRequest req, HttpServletResponse res)
          throws IOException, ServletException 
         {
         	if (!webSocketClient.isRunning()) 
