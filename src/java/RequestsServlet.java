@@ -51,7 +51,7 @@ public class RequestsServlet extends HttpServlet
 {  
 	private final WebSocketClient webSocketClient;
   	private final ClientSocket clientSocket;
-  	private final EchoServlet echoServlet;
+  	public EchoServlet echoServlet;
   	
 	private static final String ENDPOINT = "/echo";
   	private static final String WEBSOCKET_PROTOCOL_PREFIX = "ws://";
@@ -81,7 +81,7 @@ public class RequestsServlet extends HttpServlet
         		{
         			webSocketClient.start();
          		 } 
-				catch (URISyntaxException e) 
+				catch (Exception e) 
 				{
 				 e.printStackTrace();
 				}
@@ -101,6 +101,10 @@ public class RequestsServlet extends HttpServlet
     		 webSocketClient.connect(echoServlet,echoUri,request);
     		 System.out.printf("Connecting to : %s%n",echoUri);
     		 }
+    		 catch (Exception e) 
+			 {
+			    e.printStackTrace();
+			  }
         } // End of the doGet Method
             
        public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException 
