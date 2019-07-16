@@ -94,10 +94,9 @@ public class RequestsServlet extends HttpServlet
 //             {
              System.out.println("The server is waiting to get more features ...");
     			//Try accepting client connections
-             while(clientSocket.onConnect(serverSession))
+             clientSocket.onConnect(serverSession)
              {
               System.out.println("Client is now connected to server ...");  
-             }
              }
         } // End of the doGet Method
             
