@@ -86,25 +86,26 @@ public class RequestsServlet extends HttpServlet
 				 e.printStackTrace();
 				}
        		 } // end if webSocketClient not running
+       		try
+       		{ 
 		    ClientUpgradeRequest request = new ClientUpgradeRequest();
 		    // Attempt connection
 		    Future<Session> future = webSocketClient.connect(clientSocket,new URI(getWebSocketAddress()), request);
 		    // Wait for Connect
-		    try(Session serverSession = future.get())
-		    {
+		    Session serverSession = future.get()
            //  try(ServerSocket serverSocket = new ServerSocket())
 //             {
-             System.out.println("The server is waiting to get more features ...");
-    		 //Try accepting client connections
-    		 String destUri=getWebSocketAddress(); 
-    		 URI echoUri = new URI(destUri);
-    		 webSocketClient.connect(echoServlet,echoUri,request);
-    		 System.out.printf("Connecting to : %s%n",echoUri);
-    		 }
-    		 catch (URISyntaxException e) 
-			 {
+            System.out.println("The server is waiting to get more features ...");
+    		//Try accepting client connections
+    		String destUri=getWebSocketAddress(); 
+    		URI echoUri = new URI(destUri);
+    		webSocketClient.connect(echoServlet,echoUri,request);
+    		System.out.printf("Connecting to : %s%n",echoUri);
+    		}
+    		catch (Exception e) 
+			{
 			    e.printStackTrace();
-			  }
+		    }
         } // End of the doGet Method
             
        public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException 
