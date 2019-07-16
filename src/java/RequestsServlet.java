@@ -51,6 +51,8 @@ public class RequestsServlet extends HttpServlet
 {  
 	private final WebSocketClient webSocketClient;
   	private final ClientSocket clientSocket;
+  	private final EchoServlet echoServlet;
+  	
 	private static final String ENDPOINT = "/echo";
   	private static final String WEBSOCKET_PROTOCOL_PREFIX = "ws://";
   	private static final String WEBSOCKET_HTTPS_PROTOCOL_PREFIX = "wss://";
@@ -93,11 +95,10 @@ public class RequestsServlet extends HttpServlet
            //  try(ServerSocket serverSocket = new ServerSocket())
 //             {
              System.out.println("The server is waiting to get more features ...");
-    			//Try accepting client connections
-             clientSocket.onConnect(serverSession)
-             {
-              System.out.println("Client is now connected to server ...");  
-             }
+    		 //Try accepting client connections
+    		 String echoUri=getWebSocketAddress(); 
+    		 webSocketClient.connect(echoServlet,echoUri,request);
+    		 System.out.printf("Connecting to : %s%n",echoUri);
         } // End of the doGet Method
             
        public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException 
