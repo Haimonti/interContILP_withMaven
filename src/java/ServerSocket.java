@@ -39,7 +39,7 @@ public class ServerSocket extends WebSocketAdapter
     } 
     catch (IOException e) 
     {
-      logger.severe("Error echoing message: " + e.getMessage());
+      e.printStackTrace();
     }
   }
   
