@@ -96,7 +96,8 @@ public class RequestsServlet extends HttpServlet
 //             {
              System.out.println("The server is waiting to get more features ...");
     		 //Try accepting client connections
-    		 String echoUri=getWebSocketAddress(); 
+    		 String destUri=getWebSocketAddress(); 
+    		 URI echoUri = new URI(destUri);
     		 webSocketClient.connect(echoServlet,echoUri,request);
     		 System.out.printf("Connecting to : %s%n",echoUri);
     		 }
