@@ -81,7 +81,7 @@ public class RequestsServlet extends HttpServlet
         		{
         			webSocketClient.start();
          		 } 
-				catch (Exception e) 
+				catch (URISyntaxException e) 
 				{
 				 e.printStackTrace();
 				}
