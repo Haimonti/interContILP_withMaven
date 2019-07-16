@@ -99,6 +99,7 @@ public class RequestsServlet extends HttpServlet
     		 String echoUri=getWebSocketAddress(); 
     		 webSocketClient.connect(echoServlet,echoUri,request);
     		 System.out.printf("Connecting to : %s%n",echoUri);
+    		 }
         } // End of the doGet Method
             
        public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException 
