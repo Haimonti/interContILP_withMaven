@@ -73,47 +73,73 @@ public class RequestsServlet extends HttpServlet
  	  public void doGet(HttpServletRequest request, HttpServletResponse response)
          throws IOException, ServletException 
         {
+        	if (!webSocketClient.isRunning()) 
+       		{
+        		try 
+        		{
+        			webSocketClient.start();
+         		 } 
+				catch (URISyntaxException e) 
+				{
+				 e.printStackTrace();
+				}
+       		 } // end if webSocketClient not running
+		    ClientUpgradeRequest request = new ClientUpgradeRequest();
+		    // Attempt connection
+		    Future<Session> future = webSocketClient.connect(clientSocket,new URI(getWebSocketAddress()), request);
+		    // Wait for Connect
+		    Session serverSession = future.get();
+           //  try(ServerSocket serverSocket = new ServerSocket())
+//             {
+            System.out.println("The server is waiting to get more features ...");
+    			//Try accepting client connections
+            if(clientSocket.onConnect(serverSession))
+            {
+              System.out.println("Client is now connected to server ...");  
+            }
         } // End of the doGet Method
             
        public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException 
        {
-    	 String message = request.getParameter("message");
-    	 try 
-    	 {
-           sendMessageOverWebSocket(message);
-           response.sendRedirect("/");
-    	  } 
-    	 catch (Exception e) 
-    	 {
-           e.printStackTrace(response.getWriter());
-           response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR_500);
-          }
-        } // end of the doPost Method
+       } // end of the doPost Method
+    	 
+    	 // String message = request.getParameter("message");
+//     	 try 
+//     	 {
+//            sendMessageOverWebSocket(message);
+//            response.sendRedirect("/");
+//     	  } 
+//     	 catch (Exception e) 
+//     	 {
+//            e.printStackTrace(response.getWriter());
+//            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR_500);
+//           }
         
-      private void sendMessageOverWebSocket(String message) throws Exception 
-      {
-       if (!webSocketClient.isRunning()) 
-       {
-        try 
-        {
-        webSocketClient.start();
-         } 
-        catch (URISyntaxException e) 
-        {
-         e.printStackTrace();
-        }
-       } // end if webSocketClient not running
-		  ClientUpgradeRequest request = new ClientUpgradeRequest();
-		  // Attempt connection
-		  Future<Session> future = webSocketClient.connect(clientSocket,new URI(getWebSocketAddress()), request);
-		  // Wait for Connect
-		  Session session = future.get();
-		  // Send a message
-		  session.getRemote().sendString(message);
-		  // Close session
-		  session.close();
-      }     
-      
+        
+ //      private void sendMessageOverWebSocket(String message) throws Exception 
+//       {
+//        if (!webSocketClient.isRunning()) 
+//        {
+//         try 
+//         {
+//         webSocketClient.start();
+//          } 
+//         catch (URISyntaxException e) 
+//         {
+//          e.printStackTrace();
+//         }
+//        } // end if webSocketClient not running
+// 		  ClientUpgradeRequest request = new ClientUpgradeRequest();
+// 		  // Attempt connection
+// 		  Future<Session> future = webSocketClient.connect(clientSocket,new URI(getWebSocketAddress()), request);
+// 		  // Wait for Connect
+// 		  Session session = future.get();
+// 		  // Send a message
+// 		  session.getRemote().sendString(message);
+// 		  // Close session
+// 		  session.close();
+//       }     
+//       
       
        private WebSocketClient createWebSocketClient() 
        {
