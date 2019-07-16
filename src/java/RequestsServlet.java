@@ -81,7 +81,7 @@ public class RequestsServlet extends HttpServlet
         		{
         			webSocketClient.start();
          		 } 
-				catch (URISyntaxException e) 
+				catch (Exception e) 
 				{
 				 e.printStackTrace();
 				}
@@ -101,7 +101,7 @@ public class RequestsServlet extends HttpServlet
     		 webSocketClient.connect(echoServlet,echoUri,request);
     		 System.out.printf("Connecting to : %s%n",echoUri);
     		 }
-    		 catch (Exception e) 
+    		 catch (URISyntaxException e) 
 			 {
 			    e.printStackTrace();
 			  }
