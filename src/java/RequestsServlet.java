@@ -38,13 +38,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.FileOutputStream;
 import javax.servlet.ServletContext;
-import org.eclipse.jetty.http.HttpStatus;
-import org.eclipse.jetty.util.ssl.SslContextFactory;
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.WebSocketPolicy;
-import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
-import org.eclipse.jetty.websocket.client.WebSocketClient;
-import org.eclipse.jetty.websocket.common.scopes.SimpleContainerScope;
+
 
 public class RequestsServlet extends HttpServlet
 {  
