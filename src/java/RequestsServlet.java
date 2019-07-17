@@ -51,7 +51,7 @@ public class RequestsServlet extends HttpServlet
 {  
 	private final WebSocketClient webSocketClient;
   	private final ClientSocket clientSocket;
-  	public EchoServlet echoServlet;
+  	//public EchoServlet echoServlet;
   	
 	private static final String ENDPOINT = "/echo";
   	private static final String WEBSOCKET_PROTOCOL_PREFIX = "ws://";
@@ -81,17 +81,14 @@ public class RequestsServlet extends HttpServlet
 		    // Attempt connection
 		    Future<Session> future = webSocketClient.connect(clientSocket,new URI(getWebSocketAddress()), request);
 		    // Wait for Connect
-		    Session serverSession = future.get();
+		    Session clientSession = future.get();
            //  try(ServerSocket serverSocket = new ServerSocket())
 //             {
             System.out.println("The client is connected to the GAE server ...");
-    		//Try accepting client connections
-    		//String destUri=getWebSocketAddress(); 
-    		//URI echoUri = new URI(destUri);
-    		//webSocketClient.connect(echoServlet,echoUri,request);
-    		//System.out.printf("Connecting to : %s%n",echoUri);
+            //Get the file from the client
+    		clientSession.getRemote().sendString("I have new features...");
     		System.out.println("All Done!");
-    		serverSession.close();
+    		clientSession.close();
     		}
     		catch (Exception e) 
 			{

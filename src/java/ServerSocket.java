@@ -29,11 +29,13 @@ public class ServerSocket extends WebSocketAdapter
   public void onWebSocketConnect(Session session) 
   {
     super.onWebSocketConnect(session);
+    logger.fine("Socket Connected: " + session);
   }
 
   public void onWebSocketText(String message) 
   {
     super.onWebSocketText(message);
+    logger.fine("Received message: " + message);
     try 
     {
       // echo message back to client
@@ -48,10 +50,12 @@ public class ServerSocket extends WebSocketAdapter
   public void onWebSocketClose(int statusCode, String reason) 
   {
     super.onWebSocketClose(statusCode, reason);
+    logger.fine("Socket Closed: [" + statusCode + "] " + reason);
   }
 
   public void onWebSocketError(Throwable cause) 
   {
     super.onWebSocketError(cause);
+    logger.severe("Websocket error : " + cause.getMessage());
   }
 }
