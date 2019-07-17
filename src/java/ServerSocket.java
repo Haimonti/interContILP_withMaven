@@ -24,7 +24,7 @@ import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 public class ServerSocket extends WebSocketAdapter 
 {
 	
-  RequestsServlet reqServ = new RequestsServlet();
+  private Logger logger = Logger.getLogger(RequestsServlet.class.getName());
   
   public void onWebSocketConnect(Session session) 
   {
