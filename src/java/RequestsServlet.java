@@ -75,17 +75,6 @@ public class RequestsServlet extends HttpServlet
  	  public void doGet(HttpServletRequest req, HttpServletResponse res)
          throws IOException, ServletException 
         {
-        	if (!webSocketClient.isRunning()) 
-       		{
-        		try 
-        		{
-        			webSocketClient.start();
-         		 } 
-				catch (Exception e) 
-				{
-				 e.printStackTrace();
-				}
-       		 } // end if webSocketClient not running
        		try
        		{ 
 		    ClientUpgradeRequest request = new ClientUpgradeRequest();
@@ -95,12 +84,14 @@ public class RequestsServlet extends HttpServlet
 		    Session serverSession = future.get();
            //  try(ServerSocket serverSocket = new ServerSocket())
 //             {
-            System.out.println("The server is waiting to get more features ...");
+            System.out.println("The client is connected to the GAE server ...");
     		//Try accepting client connections
-    		String destUri=getWebSocketAddress(); 
-    		URI echoUri = new URI(destUri);
-    		webSocketClient.connect(echoServlet,echoUri,request);
-    		System.out.printf("Connecting to : %s%n",echoUri);
+    		//String destUri=getWebSocketAddress(); 
+    		//URI echoUri = new URI(destUri);
+    		//webSocketClient.connect(echoServlet,echoUri,request);
+    		//System.out.printf("Connecting to : %s%n",echoUri);
+    		System.out.println("All Done!");
+    		serverSession.close();
     		}
     		catch (Exception e) 
 			{
