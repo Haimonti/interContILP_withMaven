@@ -19,7 +19,7 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 @WebSocket(maxTextMessageSize = 64 * 1024)
 public class ClientSocket  
 {
-    private Logger logger = Logger.getLogger(ClientSocket.class.getName());
+    //private Logger logger = Logger.getLogger(interContILP.ClientSocket.class.getName());
     private Session session;
     // stores the messages in-memory.
     // Note : this is currently an in-memory store for demonstration,
@@ -28,7 +28,8 @@ public class ClientSocket
     
       @OnWebSocketClose
       public void onWebSocketClose(int statusCode, String reason) {
-	  logger.fine("Connection closed: " + statusCode + ":" + reason);
+	  //logger.fine("Connection closed: " + statusCode + ":" + reason);
+	  System.out.println("Connection closed: "+statusCode+ ":" + reason);
 	  this.session = null;
       }
 
@@ -36,27 +37,28 @@ public class ClientSocket
       public void onWebSocketConnect(Session session)
       {
 	  //this.session = session;
-	  //System.out.printf("Got connect: %s%n", session);
+	  //System.out.println("Got connect:", session);
 	  this.session = session;
-	  /**try
+	  try
 	  {
-	     Future<Void> fut;
-	     fut = session.getRemote().sendStringByFuture("Hello");
-	     fut.get(2, TimeUnit.SECONDS); // wait for send to complete.
+	    Future<Void> fut;
+	    fut = session.getRemote().sendStringByFuture("Hello");
+	    fut.get(2, TimeUnit.SECONDS); // wait for send to complete.
 
-	     fut = session.getRemote().sendStringByFuture("Thanks for the conversation.");
-	     fut.get(2, TimeUnit.SECONDS); // wait for send to complete.
-	   }
-	   catch (Throwable t)
-	   {
-	       t.printStackTrace();
-	   }**/
+	    fut = session.getRemote().sendStringByFuture("Thanks for the conversation.");
+	    fut.get(2, TimeUnit.SECONDS); // wait for send to complete.
+	  }
+	  catch (Throwable t)
+	  {
+	    t.printStackTrace();
+	  }
       }
 
         @OnWebSocketMessage
         public void onMessage(String msg)
         {
-	  logger.fine("Message Received : " + msg);
+	    //logger.fine("Message Received : " + msg);
+	  System.out.println("Message Received :"+msg);
 	  messages.add(msg);
 	}
 

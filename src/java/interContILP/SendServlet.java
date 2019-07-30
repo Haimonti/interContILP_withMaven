@@ -1,18 +1,28 @@
 package interContILP;
 import com.google.common.base.Preconditions;
-import java.io.IOException;
 import java.io.*;
-import java.net.*;
-import java.util.Map;
-import java.util.List;
+import java.io.IOException;
+import org.eclipse.jetty.util.IO;
+import java.io.PrintWriter;
+import java.io.FileOutputStream;
 import java.net.URI;
+import java.util.concurrent.TimeUnit;
 import java.net.URISyntaxException;
 import java.util.concurrent.Future;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.logging.Logger;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.eclipse.jetty.client.HttpResponse;
+import org.eclipse.jetty.client.api.Request;
+import org.eclipse.jetty.client.api.Response;
+import org.eclipse.jetty.client.HttpClient;
+import org.eclipse.jetty.client.api.*;
+import org.eclipse.jetty.client.util.InputStreamResponseListener;
 import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.websocket.api.Session;
@@ -20,19 +30,14 @@ import org.eclipse.jetty.websocket.api.WebSocketPolicy;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.eclipse.jetty.websocket.common.scopes.SimpleContainerScope;
-import javax.servlet.annotation.WebServlet;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
 
 @WebServlet("/send")
 /** Servlet that sends the message sent over POST to over a websocket connection. */
-public class SendServlet extends HttpServlet
-{
-    private Logger logger = Logger.getLogger(SendServlet.class.getName());
+public class SendServlet extends HttpServlet {
 
-    private static final String ENDPOINT = "/echo/";
+    //private Logger logger = Logger.getLogger(interContILP.SendServlet.class.getName());
+
+    private static final String ENDPOINT = "/echo";
     private static final String WEBSOCKET_PROTOCOL_PREFIX = "ws://";
     private static final String WEBSOCKET_HTTPS_PROTOCOL_PREFIX = "wss://";
     private static final String APPENGINE_HOST_SUFFIX = ".appspot.com";
@@ -44,47 +49,21 @@ public class SendServlet extends HttpServlet
     // GAE_SERVICE environment variable is set to the GCP service name.
     private static final String GAE_SERVICE_ENV_VAR = "GAE_SERVICE";
 
-    WebSocketClient webSocketClient;
-    ClientSocket clientSocket = new ClientSocket();
+    private final HttpClient httpClient;
+    private final WebSocketClient webSocketClient;
+    private final  ClientSocket clientSocket;
 
-    /**public SendServlet() {
+    public SendServlet()
+    {
+	//System.out.println("Does it enter the constructor?");
+	this.httpClient = createHttpClient();
 	this.webSocketClient = createWebSocketClient();
 	this.clientSocket = new ClientSocket();
-	}*/
+     }
 
       @Override
-      public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+      public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 	  String message = request.getParameter("message");
-
-	  //First attempt to setup the server
-	  /**Server server = new Server();
-	  ServerConnector connector = new ServerConnector(server);
-	  connector.setPort(8080);
-	  server.addConnector(connector);
-
-	  // Setup the basic application "context" for this application at "/"
-	  // This is also known as the handler tree (in jetty speak)
-	  ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-	  context.setContextPath("/");
-	  server.setHandler(context);
-
-	  // Add a websocket to a specific path spec
-	  ServletHolder holderEvents = new ServletHolder("ws-events", EchoServlet.class);
-	  context.addServlet(holderEvents, "/send");
-
-	  try
-	  {
-	    server.start();
-	    server.dump(System.err);
-	    server.join();
-	  }
-	  catch (Throwable t)
-	  {
-	    t.printStackTrace(System.err);
-	  }
-	  */
-	  //Now let's work with the client
-	  webSocketClient=createWebSocketClient();
 	  try
 	  {
 	      sendMessageOverWebSocket(message);
@@ -92,125 +71,144 @@ public class SendServlet extends HttpServlet
 	  }
 	  catch (Exception e)
 	   {
-	     logger.severe("Error sending message over socket: " + e.getMessage());
-	     e.printStackTrace(response.getWriter());
-	     response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR_500);
+	      //logger.severe("Error sending message over socket: " + e.getMessage());
+	      e.printStackTrace(response.getWriter());
+	      response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR_500);
 	  }
       }
-
-    private WebSocketClient createWebSocketClient()
+    
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException
     {
-	WebSocketClient webSocketClient;
-	if (System.getenv(GAE_INSTANCE_VAR) != null)
-	{
-	    // If on HTTPS, create client with SSL Context
-	    SslContextFactory sslContextFactory = new SimpleContainerScope(WebSocketPolicy.newClientPolicy()).getSslContextFactory();
-	    webSocketClient = new WebSocketClient(sslContextFactory);
-	}
-	else
-	{
-	    // local testing on HTTP
-	    webSocketClient = new WebSocketClient();
-	}
-	return webSocketClient;
+	String message = request.getParameter("message");
+       	PrintWriter writer = response.getWriter();
+	writer.println("<!DOCTYPE html>");
+	writer.println("<html>");
+	writer.println("<head>");
+	writer.println("<title>Message Received</title>");
+	writer.println("</head>");
+	writer.println("<body>");
+	writer.println("Message received is "+message);
+	writer.println("</body>");
+	writer.println("</html>");	
     }
 
-    private void sendMessageOverWebSocket(String message) throws Exception
+    public HttpClient createHttpClient()
     {
-	ServerSocket srvSkt = new ServerSocket();
-	//ClientSocket clientSocket = new ClientSocket();
-	if (!webSocketClient.isRunning())
-	{
-	  try
-	    {
-		webSocketClient.start();
+	HttpClient httpClient;
+	if (System.getenv(GAE_INSTANCE_VAR) != null) {
+	    // If on HTTPS, create client with SSL Context
+	    SslContextFactory sslContextFactory = new SslContextFactory();
+	    httpClient = new HttpClient(sslContextFactory);
+	} else {
+	    // local testing on HTTP
+	    httpClient = new HttpClient();
+	}
+	return httpClient;
+    }
+
+    public WebSocketClient createWebSocketClient() {
+	return new WebSocketClient(this.httpClient);
+    }
+
+    public void sendMessageOverWebSocket(String message) throws Exception
+    {
+	//this.httpClient=creatHttpClient();
+	//this.webSocketClient=createWebSocketClient();
+	//this.clientSocket = new ClientSocket();
+	//ServerSocket svrSkt = new ServerSocket();
+	if (!httpClient.isRunning()) {
+	    try {
+		httpClient.start();
+	    } catch (URISyntaxException e) {
+		e.printStackTrace();
 	    }
-	  catch (URISyntaxException e)
-	    {
+	}
+	if (!webSocketClient.isRunning()) {
+	    try {
+		webSocketClient.start();
+	    } catch (URISyntaxException e) {
 		e.printStackTrace();
 	    }
 	}
 	ClientUpgradeRequest request = new ClientUpgradeRequest();
-
 	// Attempt connection
-	Future<Session> future = webSocketClient.connect(srvSkt,new URI(getWebSocketAddress()), request);  
-
-	//String uriReturned ="wss://35.243.173.238";
-	//System.out.println("URI returned is "+uriReturned);
-	//Future<Session> future = webSocketClient.connect(clientSocket,new URI(uriReturned));
-
-	//Map<String, List<String>> map = request.getHeaders();
-	//System.out.println("Debug 1");
-	//for (Map.Entry<String, List<String>> entry : map.entrySet())
-	//    {
-	//	System.out.println("Key : " + entry.getKey() +" ,Value : " + entry.getValue());
-	//    }
-	
+	Future<Session> future = webSocketClient.connect(clientSocket,new URI(getWebSocketAddress()), request);
 	// Wait for Connect
 	Session session = future.get();
-
-	//Debug the connection
-	InetAddress addr;
-	int remotePort;
-	InetAddress localAddr;
-	int localPort;
-        String path;
-	String key;
-
-	addr = session.getRemoteAddress().getAddress();
-	System.out.println("Remote address "+addr);
-	remotePort = session.getRemoteAddress().getPort();
-	System.out.println("Remote port "+remotePort);
-	localAddr = session.getLocalAddress().getAddress();
-	System.out.println("Local Addr "+localAddr);
-	localPort = session.getLocalAddress().getPort();
-	System.out.println("Local Port "+localPort);
-	path = session.getUpgradeRequest().getRequestURI().getPath();
-	if (session.getUpgradeRequest() instanceof ClientUpgradeRequest)
-	{
-	    key = ((ClientUpgradeRequest)session.getUpgradeRequest()).getKey();
-	    System.out.println("Key is "+key);
-	}
-	else
-	{
-	    key = session.getUpgradeRequest().getHeader("Sec-WebSocket-Key");
-	    System.out.println("Key is "+key);
-	}
-	
-	session.setIdleTimeout(6000);
 	// Send a message
-	session.getRemote().sendString(message);
+	//System.out.println("At server: "+message);
+	// On connection the server sends the current feature file to the client
+	// And requests it for its current feature file.
+	//PrintWriter out = new PrintWriter(session.getRemote().getOutputStream(), true);
+	//BufferedReader in = new BufferedReader(new InputStreamReader(session.getRemote().getInputStream()));
+	//System.out.println("Sending feature_v1a.pl to client ...");
+
+	String filename = "/WEB-INF/feature_v1a.pl";
+	//ServletContext context = getServletContext();
+	// First get the file InputStream using ServletContext.getResourceAsStream()
+	// method.
+	try
+	{
+	    // The client gets the file from the server
+	    //ContentResponse response = httpClient.GET(getWebSocketAddress()+filename);
+	    //System.out.println("Here are the contents of the file on the server "+response.getContentAsString());
+	    // The client sends its file to the server
+	    //
+	    //ContentResponse sendToServer = httpClient.newRequest(getWebSocketAddress()+"/uploadFile")
+	    //	.method(HttpMethod.POST)
+	    //	.content(new InputStreamContentProvider(new FileInputStream("file_to_upload.txt")), "text/plain")
+	    //	.send();
+	    Request sendToServer = httpClient.newRequest(getWebSocketAddress()+filename);
+	    //System.out.printf("Using HttpClient v%s%n", getHttpClientVersion());
+	    System.out.printf("Requesting: ", getWebSocketAddress()+filename);
+	    InputStreamResponseListener streamResponseListener = new InputStreamResponseListener();
+	    sendToServer.send(streamResponseListener);
+	    Response getFromServer  = streamResponseListener.get(5, TimeUnit.SECONDS);
+
+	    if (getFromServer.getStatus() != HttpStatus.OK_200)
+	    {
+	      throw new IOException(String.format("Failed to GET URI [%d %s]: %s",getFromServer.getStatus(),getFromServer.getReason(),getWebSocketAddress()+filename));
+	    }
+	    Path tmpFile = Files.createTempFile("tmp", ".pl");
+
+	    try (InputStream inputStream = streamResponseListener.getInputStream();OutputStream outputStream = Files.newOutputStream(tmpFile))
+	    {
+	      IO.copy(inputStream, outputStream);
+	    }
+	    System.out.printf("Downloaded %s%n", getWebSocketAddress()+filename);
+	    System.out.printf("Destination: %s (%,d bytes)%n", tmpFile.toString(), Files.size(tmpFile));
+	}
+	catch(Exception e)
+	{
+	    e.printStackTrace();
+	}
+	//session.getRemote().sendString(message);
 	// Close session
 	session.close();
+
+	//return response.getContentAsString();
     }
 
     /**
      * Returns the host:port/echo address a client needs to use to communicate with the server.
      * On App engine Flex environments, result will be in the form wss://project-id.appspot.com/echo
      */
-    public static String getWebSocketAddress()
-    {
+    public static String getWebSocketAddress() {
 	// Use ws://127.0.0.1:8080/echo when testing locally
 	String webSocketHost = "127.0.0.1:8080";
 	String webSocketProtocolPrefix = WEBSOCKET_PROTOCOL_PREFIX;
 
 	// On App Engine flexible environment, use wss://project-id.appspot.com/echo
-	if (System.getenv(GAE_INSTANCE_VAR) != null)
-	    {
+	if (System.getenv(GAE_INSTANCE_VAR) != null) {
 	    String projectId = System.getenv(GOOGLE_CLOUD_PROJECT_ENV_VAR);
-	    System.out.println("Project ID is "+projectId);
-	    if (projectId != null)
-	    {
+	    if (projectId != null) {
 		String serviceName = System.getenv(GAE_SERVICE_ENV_VAR);
-		System.out.println("Service name is "+serviceName);
-		//webSocketHost = serviceName + "-dot-" + projectId + APPENGINE_HOST_SUFFIX;
-		webSocketHost=projectId + APPENGINE_HOST_SUFFIX;
+		webSocketHost = serviceName + "-dot-" + projectId + APPENGINE_HOST_SUFFIX;
 	    }
 	    Preconditions.checkNotNull(webSocketHost);
 	    // Use wss:// instead of ws:// protocol when connecting over https
 	    webSocketProtocolPrefix = WEBSOCKET_HTTPS_PROTOCOL_PREFIX;
 	}
-        System.out.println("Address is : " + webSocketProtocolPrefix + webSocketHost + ENDPOINT);
 	return webSocketProtocolPrefix + webSocketHost + ENDPOINT;
     }
 }

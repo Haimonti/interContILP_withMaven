@@ -3,45 +3,54 @@ import java.io.IOException;
 import java.util.logging.Logger;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 /*
  * Server-side WebSocket : echoes received message back to client.
  */
-public class ServerSocket extends WebSocketAdapter
-{
-    private Logger logger = Logger.getLogger(SendServlet.class.getName());
-    
-      @Override
+@WebSocket(maxTextMessageSize = 64 * 1024)
+public class ServerSocket {
+    //private Logger logger = Logger.getLogger(interContILP.SendServlet.class.getName());
+    private Session session;
+
+      @OnWebSocketConnect
       public void onWebSocketConnect(Session session) {
-	  super.onWebSocketConnect(session);
-	  logger.fine("Socket Connected: " + session);
+	  this.session = session;
+	  //logger.fine("Socket Connected: " + session);
       }
 
-      @Override
-      public void onWebSocketText(String message) {
-	  super.onWebSocketText(message);
-	  logger.fine("Received message: " + message);
-	  try {
+      @OnWebSocketMessage
+      public void onWebSocketText(String message)
+      {
+	  //logger.fine("Received message: " + message);
+	  try
+	  {
 	      // echo message back to client
-	      getRemote().sendString(message);
-	  } catch (IOException e) {
-	      logger.severe("Error echoing message: " + e.getMessage());
+	      System.out.println("Inside the ServerSocket class, Echo message back to client"+message);
+	      this.session.getRemote().sendString(message);
+	  }
+	  catch (IOException e)
+	  {
+	      //logger.severe("Error echoing message: " + e.getMessage());
+	       e.printStackTrace();
 	  }
       }
 
-      @Override
-      public void onWebSocketClose(int statusCode, String reason) {
-	  super.onWebSocketClose(statusCode, reason);
-	  logger.fine("Socket Closed: [" + statusCode + "] " + reason);
+      @OnWebSocketClose
+      public void onWebSocketClose(int statusCode, String reason)
+      {
+	  System.out.println("Socket closed: "+ reason);
+	  //logger.fine("Socket Closed: [" + statusCode + "] " + reason);
       }
 
-      @Override
-      public void onWebSocketError(Throwable cause) {
-	  super.onWebSocketError(cause);
-	  logger.severe("Websocket error : " + cause.getMessage());
+      @OnWebSocketError
+      public void onWebSocketError(Throwable cause)
+      {
+	  //logger.severe("Websocket error : " + cause.getMessage());
+	  System.out.println("Websocket error: "+cause.getMessage());
       }
 }
